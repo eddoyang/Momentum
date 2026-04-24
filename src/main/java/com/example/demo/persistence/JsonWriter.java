@@ -21,12 +21,15 @@ public class JsonWriter {
     public void open() throws FileNotFoundException {
         File file = new File(destination);
         File parent = file.getParentFile();
-        if (parent != null) parent.mkdirs();
+        if (parent != null) {
+            parent.mkdirs();
+        }
+
         writer = new PrintWriter(file);
     }
 
-    public void write(Todo todo) {
-        JSONObject json = todo.toJson();
+    public void write(TaskManager taskManager) {
+        JSONObject json = taskManager.toJson();
         saveToFile(json.toString(TAB));
     }
 

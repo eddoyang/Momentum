@@ -10,7 +10,7 @@ target/
 # VS Code
 .vscode/
 
-# Gradle (keep in case you ever use it)
+# Gradle
 .gradle/
 build/
 
@@ -24,3 +24,8 @@ Icon?
 
 # Office temp files
 ~$*
+
+# data
+/data/**
+!/data/persistence/
+!/data/persistence/testReader*.json

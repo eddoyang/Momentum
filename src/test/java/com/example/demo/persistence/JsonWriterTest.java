@@ -1,16 +1,39 @@
 package com.example.demo.persistence;
 
-import model.*;
+import com.example.demo.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JsonWriterTest extends JsonTest {
 
+class JsonWriterTest extends JsonTest {
+    private TaskManager taskManager;
+    private UUID id1;
+    private UUID id2;
+    private ZonedDateTime time1;
+    private ZonedDateTime time2;
+    private Task task1;
+    private Task task2;
+
+    @BeforeEach
+    void setUp() {
+        id1 = UUID.fromString("00000000-0000-0000-0000-000000000001");
+        id2 = UUID.fromString("00000000-0000-0000-0000-000000000002");
+        time1 = ZonedDateTime.of(2026, 1, 1, 14, 30, 0, 0, ZoneId.of("UTC"));
+        time2 = ZonedDateTime.of(2026, 1, 1, 4, 30, 0, 0, ZoneId.of("UTC"));
+        taskManager = new TaskManager();
+        task1 = new Task(id1, "abc", "aaa", false, time1);
+        task2 = new Task(id2,"zxy", "bbb", true, time2);
+    }
+
+
+    //Test invalid file
     @Test
     void testWriterInvalidFile() {
         try {
@@ -22,60 +45,47 @@ class JsonWriterTest extends JsonTest {
         }
     }
 
+
+    //Test writing empty manager
     @Test
-    void testWriterEmptyFolder() {
+    void testWriterEmptyManager() {
         try {
-            Todo todo = new Todo();
             JsonWriter writer = new JsonWriter("data/persistence/testWriterEmpty.json");
             writer.open();
-            writer.write(todo);
+            writer.write(taskManager);
             writer.close();
 
             JsonReader reader = new JsonReader("data/persistence/testWriterEmpty.json");
-            todo = reader.read();
-            assertEquals(0, todo.getSize());
+            taskManager = reader.read();
+            assertEquals(0, taskManager.getTaskMap().size());
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
     }
 
+    //Test writing General Manager
     @Test
-    void testWriterGeneralFolder() {
+    void testWriterGeneralManager() {
         try {
-            Todo todo = new Todo();
-            Course c1 = new Course("abc");
-            c1.addAssignment(new Assignment("aaa", LocalDate.of(2026,1,1), "low", false));
-            Course c2 = new Course("zxy");
-            c2.addAssignment(new Assignment("bbb", LocalDate.of(2026,1,1), "high", false));
+            taskManager.addTask(task1);
+            taskManager.addTask(task2);
 
-            todo.addTask(c1);
-            todo.addTask(c2);
-            todo.addTask(new Assignment("ccc", LocalDate.of(2026,1,1), "low", true));
-
-            
             JsonWriter writer = new JsonWriter("data/persistence/testReaderGeneralFolder.json");
             writer.open();
-            writer.write(todo);
+            writer.write(taskManager);
             writer.close();
 
             JsonReader reader = new JsonReader("data/persistence/testReaderGeneralFolder.json");
-            todo = reader.read();
+            TaskManager tempManager = reader.read();
 
-            List<Task> tempTasks = todo.getAllTasks();
-            Course temp1 = (Course) todo.getTask(0);
-            Course temp2 = (Course) todo.getTask(1);
-            Assignment temp3 = (Assignment) temp1.getAssignment(0);
-            Assignment temp4 = (Assignment) temp2.getAssignment(0);
-            Assignment temp5 = (Assignment) todo.getTask(2);
-
-            assertEquals(3, tempTasks.size());
-            checkCourse("abc", temp1, "aaa", LocalDate.of(2026, 1, 1), 
-                        "low", false, temp3);
-            checkCourse("zxy", temp2, "bbb", LocalDate.of(2026, 1, 1),
-                        "high", false, temp4);
-            checkAssignment("ccc", LocalDate.of(2026,1,1), "low", true, temp5);
+            assertEquals(2, tempManager.getTaskMap().size());
+            Task temp1 = tempManager.getTaskMap().get(id1);
+            Task temp2 = tempManager.getTaskMap().get(id2);
+            checkTask(id1, "abc", "aaa", false, time1, temp1);
+            checkTask(id2, "zxy", "bbb", true, time2, temp2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
     }
+
 }
