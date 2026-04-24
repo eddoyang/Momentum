@@ -1,0 +1,26 @@
+# Maven
+target/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Gradle (keep in case you ever use it)
+.gradle/
+build/
+
+# macOS junk
+.DS_Store
+Icon?
+
+# Misc
+.Rhistory
+*.log
+
+# Office temp files
+~$*
