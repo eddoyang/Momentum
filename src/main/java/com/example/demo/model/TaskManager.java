@@ -5,8 +5,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class TaskManager {
     private Map<UUID, Task> taskMap = new HashMap<>();
     private Map<String, Set<UUID>> categoryMap = new HashMap<>();
