@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Momentum</title>
+</head>
+<body>
+<h1>Momentum</h1>
+<ul id="task-list"></ul>
+
+<script>
+    async function loadTasks() {
+        const response = await fetch('/api/tasks');
+        const data = await response.json();
+        const list = document.getElementById('task-list');
+        list.innerHTML = '';
+        for (const task of data.tasks) {
+            const li = document.createElement('li');
+            li.textContent = `${task.title} — due ${task.deadline}`;
+            list.appendChild(li);
+        }
+    }
+    loadTasks();
+</script>
+</body>
+</html>
