@@ -6,6 +6,12 @@
 </head>
 <body>
 <h1>Momentum</h1>
+<form id="add-task-form">
+    <input type="text" id="title-input" placeholder="Task title" required>
+    <input type="text" id="category-input" placeholder="Category">
+    <input type="datetime-local" id="deadline-input" required>
+    <button type="submit">Add</button>
+</form>
 <ul id="task-list"></ul>
 
 <script>
@@ -21,6 +27,31 @@
         }
     }
     loadTasks();
+
+    document.getElementById('add-task-form').addEventListener('submit', async (e) => {
+    e.preventDefault();   // stop the page from reloading
+    const title = document.getElementById('title-input').value;
+    const category = document.getElementById('category-input').value || null;
+    const localDeadline = document.getElementById('deadline-input').value;
+    // datetime-local gives us "2026-04-25T14:00" — convert to a ZonedDateTime string the backend can parse
+    const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
+
+    const body = {
+        id: crypto.randomUUID(),
+        title,
+        category,
+        deadline
+    };
+
+    await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+
+    e.target.reset();   // clear the form
+    loadTasks();        // refresh the list
+});
 </script>
 </body>
 </html>
