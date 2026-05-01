@@ -20,57 +20,74 @@
         const data = await response.json();
         const list = document.getElementById('task-list');
         list.innerHTML = '';
+
         for (const task of data.tasks) {
             const li = document.createElement('li');
-            li.textContent = `${task.title} — due ${formatDeadline(task.deadline)}`;
+
+            // text part
+            const text = document.createElement('span');
+            text.textContent = `${task.title} — due ${formatDeadline(task.deadline)}`;
+            li.appendChild(text);
+
+            // delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => deleteTask(task.id));
+            li.appendChild(deleteButton);
+
             list.appendChild(li);
         }
     }
 
-    function formatDeadline(isoString) {
-
-        const cleaned = isoString.replace(/\[.*\]/, '');
-        const date = new Date(cleaned);
-
-        const datePart = date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-        });
-
-        const hour = date.getHours().toString().padStart(2, '0');
-        const minute = date.getMinutes().toString().padStart(2, '0');
-        const timePart = `${hour}:${minute}`;
-
-        return `${datePart} (${timePart})`;
+    async function deleteTask(taskId) {
+        await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+        loadTasks();
     }
 
-    loadTasks();
+        function formatDeadline(isoString) {
 
-    document.getElementById('add-task-form').addEventListener('submit', async (e) => {
-    e.preventDefault();   // stop the page from reloading
-    const title = document.getElementById('title-input').value;
-    const category = document.getElementById('category-input').value || null;
-    const localDeadline = document.getElementById('deadline-input').value;
-    // datetime-local gives us "2026-04-25T14:00" — convert to a ZonedDateTime string the backend can parse
-    const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
+            const cleaned = isoString.replace(/\[.*\]/, '');
+            const date = new Date(cleaned);
 
-    const body = {
-        id: crypto.randomUUID(),
-        title,
-        category,
-        deadline
-    };
+            const datePart = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
 
-    await fetch('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    });
+            const hour = date.getHours().toString().padStart(2, '0');
+            const minute = date.getMinutes().toString().padStart(2, '0');
+            const timePart = `${hour}:${minute}`;
 
-    e.target.reset();   // clear the form
-    loadTasks();        // refresh the list
-    });
+            return `${datePart} (${timePart})`;
+        }
+
+        loadTasks();
+
+        document.getElementById('add-task-form').addEventListener('submit', async (e) => {
+        e.preventDefault();   // stop the page from reloading
+        consttitle = document.getElementById('title-input').value;
+        const category = document.getElementById('category-input').value || null;
+        const localDeadline = document.getElementById('deadline-input').value;
+        // datetime-local gives us "2026-04-25T14:00" — convert to a ZonedDateTime string the backend can parse
+        const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
+
+        const body = {
+            id: crypto.randomUUID(),
+            title,
+            category,
+            deadline
+        };
+
+        await fetch('/api/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        e.target.reset();   // clear the form
+        loadTasks();        // refresh the list
+        });
 </script>
 </body>
 </html>
