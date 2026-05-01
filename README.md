@@ -4,14 +4,14 @@ A personal task manager to keep you focused on whats important.
 
 ## About
 
-Momentum is a hobby/learning project that lets you add, complete, and remove tasks, with a focus on hour-by-hour deadline ordering.
+Momentum is a personal/learning project that lets you add, complete, and remove tasks, with a focus on hour-by-hour deadline ordering.
 The app sorts tasks by their closest upcoming deadline so the next thing you need to work on is always front and center.
 
 As a university student, procrastination is a problem that I see almost every student face for exams, assignments, and projects.
-I wanted to build an app to learn and experience full-stack developing, but I also wanted this app to be useful to myself and my peers.
+I wanted to build an app to learn and experience full-stack developing. However, I also wanted this app to be useful to myself and my peers.
 
-Personally, typing out homework lists or making clunky excel sheets felt impractical, and I wanted a simple, yet modern, way of keeping track of my deadlines.
-My solution was Momentum -  an effortless way to ensure you never miss a deadline and keep you motivated on your tasks.
+Personally, typing out homework lists or making clunky excel sheets felt impractical. I wanted a simple, yet modern, way of keeping track of my deadlines.
+My solution was Momentum -  an effortless way to ensure you never miss a deadline.
 
 ## Features
 
@@ -41,7 +41,7 @@ From the project root:
 ./mvnw spring-boot:run
 ```
 
-Then open [http://localhost:8080](http://localhost:8080) in your browser.
+Then open [http://localhost:8080] in your browser.
 
 ## Roadmap
 
@@ -52,4 +52,5 @@ Then open [http://localhost:8080](http://localhost:8080) in your browser.
 - [ ] Online sync / multi-device support
 
 ## Notes for self
-- Figure out possible AI implementations
+- Plan for possible AI implementations
+
