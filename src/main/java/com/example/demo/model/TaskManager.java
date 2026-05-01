@@ -137,8 +137,13 @@ public class TaskManager {
     //----------------JSON----------------
     public JSONArray taskToJson() {
         JSONArray jsonArray = new JSONArray();
-        for (Task task : taskMap.values()) {
-            jsonArray.put(task.toJson());
+        for (List<UUID> bucket : hourlySchedule.values()) {
+            for (UUID id : bucket) {
+                Task task = taskMap.get(id);
+                if (task != null) {
+                    jsonArray.put(task.toJson());
+                }
+            }
         }
         return jsonArray;
     }
