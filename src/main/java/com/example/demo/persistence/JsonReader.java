@@ -54,7 +54,7 @@ public class JsonReader {
     private Task parseTask(JSONObject jsonObject) {
         UUID id =  UUID.fromString(jsonObject.getString("id"));
         String title =   jsonObject.getString("title");
-        String category =   jsonObject.getString("category");
+        String category =   jsonObject.optString("category", null);
         boolean isComplete =  jsonObject.getBoolean("isComplete");
         ZonedDateTime deadline = ZonedDateTime.parse(jsonObject.getString("deadline"));
 
