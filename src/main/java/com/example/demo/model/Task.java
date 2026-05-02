@@ -14,8 +14,7 @@ public class Task implements Writable {
     private boolean isComplete;
     private ZonedDateTime deadline;
 
-
-    //----------------Methods----------------
+    //---------------- Methods ----------------
     public Task(UUID id, String title, String category,
                 boolean isComplete, ZonedDateTime deadline) {
         this.id = id;
@@ -25,9 +24,7 @@ public class Task implements Writable {
         this.deadline = deadline;
     }
 
-    //----------------Implementations----------------
-
-    //----------------Getter/Setters----------------
+    //---------------- Getter/Setters ----------------
     public UUID getId() { return id; }
 
     public void setId(UUID id) { this.id = id; }
@@ -47,7 +44,7 @@ public class Task implements Writable {
     public ZonedDateTime getDeadline() { return deadline; }
 
     public void setDeadline(ZonedDateTime deadline) { this.deadline = deadline; }
-    //----------------JSON----------------
+    //---------------- JSON ----------------
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

@@ -19,7 +19,7 @@ public class TaskManager {
 
     private static final String DATA_FILE = "data/momentum.json";
 
-    //----------------Methods----------------
+    //---------------- Methods ----------------
 
     //Adds task to data structures
     public void addTask(Task task) {
@@ -123,7 +123,7 @@ public class TaskManager {
         return new JSONObject();
     }
 
-    //----------------Getter/Setters----------------
+    //---------------- Getter/Setters ----------------
     public Map<UUID, Task> getTaskMap() {
         return taskMap;
     }
@@ -134,7 +134,7 @@ public class TaskManager {
         return categoryMap;
     }
 
-    //----------------JSON----------------
+    //---------------- JSON ----------------
     public JSONArray taskToJson() {
         JSONArray jsonArray = new JSONArray();
         for (List<UUID> bucket : hourlySchedule.values()) {

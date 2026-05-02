@@ -6,15 +6,78 @@
 </head>
 <body>
 <h1>Momentum</h1>
-<form id="add-task-form">
-    <input type="text" id="title-input" placeholder="Task title" required autocomplete="off">
-    <input type="text" id="category-input" placeholder="Category" autocomplete="off">
+
+<form id="add-task-form" autocomplete="off">
+    <input type="text" id="title-input" placeholder="Task title" required>
+    <input type="text" id="category-input" placeholder="Category">
     <input type="datetime-local" id="deadline-input" required>
     <button type="submit">Add</button>
 </form>
+
+<section id="next-task">
+    <h2>To Complete</h2>
+    <div id="next-task-content">Loading...</div>
+</section>
+
 <ul id="task-list"></ul>
 
 <script>
+    // ---------- State ----------
+    let nextTaskTitle = null;
+    let nextTaskDeadline = null;
+
+    // ---------- Helpers ----------
+    function formatDeadline(isoString) {
+        const cleaned = isoString.replace(/\[.*\]/, '');
+        const date = new Date(cleaned);
+
+        const datePart = date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        const timePart = `${hour}:${minute}`;
+
+        return `${datePart} (${timePart})`;
+    }
+
+    function updateCountdown() {
+        const content = document.getElementById('next-task-content');
+
+        //no tasks
+        if (!nextTaskDeadline) {
+            content.textContent = 'No upcoming tasks';
+            return;
+        }
+
+        const diff = nextTaskDeadline - new Date();
+
+        //overdue
+        if (diff < 0) {
+            content.textContent = `${nextTaskTitle} — overdue`;
+            return;
+        }
+
+        const minutes = Math.floor(diff / 60000);
+
+        //less than an hour
+        if (minutes < 60) {
+            if (minutes === 0) {
+                content.textContent = `${nextTaskTitle} — due in less than a minute`;
+            } else {
+                content.textContent = `${nextTaskTitle} — due in ${minutes} minute${minutes === 1 ? '' : 's'}`;
+            }
+        } else {
+        //one or more hours
+            const hours = Math.floor(minutes / 60);
+            content.textContent = `${nextTaskTitle} — due in ${hours} hour${hours === 1 ? '' : 's'}`;
+        }
+    }
+
+    // ---------- Rendering ----------
     async function loadTasks() {
         const response = await fetch('/api/tasks');
         const data = await response.json();
@@ -24,12 +87,18 @@
         for (const task of data.tasks) {
             const li = document.createElement('li');
 
-            // text part
+
             const text = document.createElement('span');
             text.textContent = `${task.title} — due ${formatDeadline(task.deadline)}`;
             li.appendChild(text);
 
-            // delete button
+            //complete button
+            const completeButton = document.createElement('button');
+            completeButton.textContent = 'Complete';
+            completeButton.addEventListener('click', () => completeTask(task.id));
+            li.appendChild(completeButton);
+
+            //delete button
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
             deleteButton.addEventListener('click', () => deleteTask(task.id));
@@ -39,37 +108,42 @@
         }
     }
 
+    async function loadNextTask() {
+        const response = await fetch('/api/tasks/next');
+        const data = await response.json();
+
+        if (!data.title) {
+            nextTaskTitle = null;
+            nextTaskDeadline = null;
+        } else {
+            nextTaskTitle = data.title;
+            nextTaskDeadline = new Date(data.deadline.replace(/\[.*\]/, ''));
+        }
+
+        updateCountdown();
+    }
+
+    // ---------- API actions ----------
+    async function completeTask(taskId) {
+        await fetch(`/api/tasks/${taskId}/complete`, { method: 'PATCH' });
+        loadTasks();
+        loadNextTask();
+    }
+
     async function deleteTask(taskId) {
         await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
         loadTasks();
+        loadNextTask();
     }
 
-        function formatDeadline(isoString) {
+    // ---------- Form submission ----------
+    document.getElementById('add-task-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-            const cleaned = isoString.replace(/\[.*\]/, '');
-            const date = new Date(cleaned);
-
-            const datePart = date.toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric'
-            });
-
-            const hour = date.getHours().toString().padStart(2, '0');
-            const minute = date.getMinutes().toString().padStart(2, '0');
-            const timePart = `${hour}:${minute}`;
-
-            return `${datePart} (${timePart})`;
-        }
-
-        loadTasks();
-
-        document.getElementById('add-task-form').addEventListener('submit', async (e) => {
-        e.preventDefault();   // stop the page from reloading
-        consttitle = document.getElementById('title-input').value;
+        const title = document.getElementById('title-input').value;
         const category = document.getElementById('category-input').value || null;
         const localDeadline = document.getElementById('deadline-input').value;
-        // datetime-local gives us "2026-04-25T14:00" — convert to a ZonedDateTime string the backend can parse
+        // datetime-local gives "2026-04-25T14:00" — convert to backend ZonedDateTime format
         const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
 
         const body = {
@@ -85,9 +159,15 @@
             body: JSON.stringify(body)
         });
 
-        e.target.reset();   // clear the form
-        loadTasks();        // refresh the list
-        });
+        e.target.reset();
+        loadTasks();
+        loadNextTask();
+    });
+
+    // ---------- Init ----------
+    loadTasks();
+    loadNextTask();
+    setInterval(updateCountdown, 60000);
 </script>
 </body>
 </html>
