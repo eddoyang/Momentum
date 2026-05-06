@@ -1,26 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!--Metadata of html/page-->
 <head>
+<!--    font library -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Momo+Trust+Display&family=Short+Stack&display=swap" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>Momentum</title>
+    <style>
+        * {
+            box-sizing: border-box;  /*sizing for everything*/
+        }
+
+        body {
+            margin: 0; /* space outside element- */
+            padding: 46px; /* space inside element (gap between edges) */
+            color: black;    /* element color */
+            background-color: #b1b1b1; /* background color */
+            line-height: 1.5; /* height between elements */
+            font-family: "Elms Sans", sans-serif; /* default font */
+        }
+
+        .container {
+            min-height: calc(100vh - 32px);
+            padding: 50px;
+            background-color: #edecec;
+            border-radius: 30px;
+            border: 2px double #ffffff;
+        }
+
+        /* Momentum Header */
+        h1 {
+            margin: 0 0 32px 0;               /* top-left, with spacing below */
+            font-size: 28px;
+            line-height: 1.2;
+        }
+
+        /* tasks body */
+        .task-body {
+            border-radius: 15px;
+            background-color: #f6f6f6;
+            max-width: 700px;                 /* narrow column for the form/list */
+            padding: 24px;
+            margin: 0 auto;                   /* centers it inside .container */
+        }
+
+        /* Task adding form */
+        #add-task-form {
+            display: flex; /* lay elements row format (default) */
+            gap: 5px; /* gap between elements */
+            margin-bottom: 24px; /* gap between task form and list */
+        }
+
+        /* task add input boxes */
+        #add-task-form input,
+        #add-task-form button {
+            padding: 8px;   /* size of border/boxes */
+            background-color: #f6f6f6;
+            border: 1.5px solid #c1c1c1; /* border attributes */
+            border-radius: 15px; /* radius of boxes (makes round) */
+            font-size: 14px;     /* size of text font */
+            font-family: inherit;  /* match the body font */
+        }
+
+        /* task add button */
+        #add-task-form button {
+            background-color: #face5c;
+            color: #ffffff;
+            border: none;
+            cursor: pointer; /* make cursor pointer when hovering */
+        }
+        #add-task-form button:hover {
+            background-color: #ffb300;
+        }
+
+        /* upcoming task */
+        #next-task {
+            background-color: #f6f6f6;
+            border: 2px solid #c1c1c1;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* header of "To Complete" (h2) */
+        #next-task h2 {
+            font-family: "Short Stack", cursive;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #666;
+            margin: 0 0 8px 0;
+        }
+
+        /* content of upcoming task */
+        #next-task-content {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* collective list of tasks */
+        #task-list {
+            list-style: none;       /* remove bullets */
+            padding: 0;
+            margin: 0;
+        }
+
+        /* individual tasks in task list */
+        #task-list li {
+            font-family: "Cantarell", sans-serif;
+            font-weight: lighter;
+            font-size: clamp(0.6rem, 0.9vw, 0.9rem);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #f6f6f6;
+            border: 2px solid #ededed;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        #task-list li span {
+            flex: 1;                /* take up remaining space, pushing buttons right */
+        }
+
+        /* buttons of each task */
+        #task-list button {
+            font-family: "Short Stack", cursive;
+            padding: 4px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .complete-btn {
+            background-color: #ecebeb;
+        }
+        .complete-btn:hover {
+            background-color: #e1e1e1;
+        }
+
+        .delete-btn {
+            background-color: #f19898;
+        }
+        .delete-btn:hover {
+            background-color: #dd8c8c;
+        }
+
+    </style>
 </head>
+
+<!--the body of the html/page-->
 <body>
-<h1>Momentum</h1>
+<main class="container">
+    <h1>Momentum</h1>
 
-<form id="add-task-form" autocomplete="off">
-    <input type="text" id="title-input" placeholder="Task title" required>
-    <input type="text" id="category-input" placeholder="Category">
-    <input type="datetime-local" id="deadline-input" required>
-    <button type="submit">Add</button>
-</form>
+<!--actual content-->
+    <div class="task-body">
+        <!--HTML form for adding task (user input container)-->
+        <form id="add-task-form" autocomplete="off">
+            <input type="text" id="title-input" placeholder="Task title" required>
+            <input type="text" id="category-input" placeholder="Category">
+            <input type="datetime-local" id="deadline-input" required>
+            <button type="submit">Add</button>
+        </form>
 
-<section id="next-task">
-    <h2>To Complete</h2>
-    <div id="next-task-content">Loading...</div>
-</section>
+        <!--Shows the upcoming task with the soonest deadline-->
+        <section id="next-task">
+            <h2>To Complete</h2>
+            <div id="next-task-content">Loading...</div>
+        </section>
 
-<ul id="task-list"></ul>
+        <ul id="task-list"></ul>
+    </div>
 
+</main>
 <script>
     // ---------- State ----------
     let nextTaskTitle = null;
@@ -79,6 +239,18 @@
 
     // ---------- Rendering ----------
     async function loadTasks() {
+
+        // testing purposes
+        // const data = {
+        //     tasks: [
+        //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
+        //         { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
+        //         { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
+        //         { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
+        //         { id: '5', title: 'Submit assignment 3', deadline: '2026-04-28T23:59Z[UTC]' }
+        //     ]
+        // };
+
         const response = await fetch('/api/tasks');
         const data = await response.json();
         const list = document.getElementById('task-list');
@@ -95,12 +267,14 @@
             //complete button
             const completeButton = document.createElement('button');
             completeButton.textContent = 'Complete';
+            completeButton.classList.add('complete-btn');
             completeButton.addEventListener('click', () => completeTask(task.id));
             li.appendChild(completeButton);
 
             //delete button
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
+            deleteButton.classList.add('delete-btn');
             deleteButton.addEventListener('click', () => deleteTask(task.id));
             li.appendChild(deleteButton);
 
@@ -171,3 +345,5 @@
 </script>
 </body>
 </html>
+
+
