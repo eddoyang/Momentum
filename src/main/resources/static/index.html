@@ -3,7 +3,7 @@
 
 <!--Metadata of html/page-->
 <head>
-<!--    font library -->
+    <!--font library -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Momo+Trust+Display&family=Short+Stack&display=swap" rel="stylesheet">
@@ -12,24 +12,13 @@
     <title>Momentum</title>
     <style>
         * {
-            box-sizing: border-box;  /*sizing for everything*/
+            box-sizing: border-box;  /* sizing for everything */
         }
 
-        body {
-            margin: 0; /* space outside element- */
-            padding: 46px; /* space inside element (gap between edges) */
-            color: black;    /* element color */
-            background-color: #b1b1b1; /* background color */
-            line-height: 1.5; /* height between elements */
-            font-family: "Elms Sans", sans-serif; /* default font */
-        }
-
-        .container {
-            min-height: calc(100vh - 32px);
-            padding: 50px;
-            background-color: #edecec;
-            border-radius: 30px;
-            border: 2px double #ffffff;
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
         }
 
         /* Momentum Header */
@@ -39,34 +28,76 @@
             line-height: 1.2;
         }
 
-        /* tasks body */
-        .task-body {
+        /*------------- background -------------*/
+        body {
+            margin: 0; /* space outside element- */
+            padding: 40px; /* space inside element (gap between edges) */
+            color: black;    /* element color */
+            background-color: #cfcfcf; /* background color */
+            line-height: 1.5; /* height between elements */
+            font-family: "Elms Sans", sans-serif; /* default font */
+        }
+
+        /*------------- foreground -------------*/
+        /* container of content */
+        .container {
+            height: calc(100vh - 80px); /* viewport height - 2*background padding (account for initial pad) */
+            padding: 50px;
+            background-color: #f1f1f1;
+            border-radius: 30px;
+            border: 2px double #ffffff;
+        }
+
+        /* all task content */
+        .task-content {
+            display: flex;              /* arrange children in a row */
+            gap: 24px;                  /* space between the two columns */
+            max-width: 1100px;          /* width of content */
+            margin: 0 auto;             /* center */
+            padding: 24px;              /* space between container and content */
+
+            /* for future ref: If I want to surround the task content */
+            /*border: 2px double #d5d5d5;*/
+            /*border-radius: 15px;*/
+            /*background-color: #f6f6f6;*/
+        }
+
+        /*------------- Tasks body -------------*/
+        .task-column {
+            flex: 1;                  /* take all remaining space */
+            border: 1px solid #ffffff;
             border-radius: 15px;
-            background-color: #f6f6f6;
-            max-width: 700px;                 /* narrow column for the form/list */
-            padding: 24px;
-            margin: 0 auto;                   /* centers it inside .container */
+            padding: 40px;
+            background-color: white;
         }
 
-        /* Task adding form */
+        /*------------- Task adding form -------------*/
+        .form-column {
+            width: 280px;
+        }
+
         #add-task-form {
-            display: flex; /* lay elements row format (default) */
-            gap: 5px; /* gap between elements */
-            margin-bottom: 24px; /* gap between task form and list */
+            flex-direction: column;
+            display: flex;              /* lay elements row format (default) */
+            gap: 8px;                   /* gap between elements */
+            margin-bottom: 24px;        /* gap between task form and list */
+            background-color: white;
+            border: 1px solid #dddfff;
+            border-radius: 15px;
+            padding: 16px;
         }
 
-        /* task add input boxes */
+        /* Task info boxes */
         #add-task-form input,
         #add-task-form button {
             padding: 8px;   /* size of border/boxes */
             background-color: #f6f6f6;
-            border: 1.5px solid #c1c1c1; /* border attributes */
+            border: 1px solid #c1c1c1; /* border attributes */
             border-radius: 15px; /* radius of boxes (makes round) */
             font-size: 14px;     /* size of text font */
             font-family: inherit;  /* match the body font */
         }
-
-        /* task add button */
+        /* Task add button */
         #add-task-form button {
             background-color: #face5c;
             color: #ffffff;
@@ -77,16 +108,15 @@
             background-color: #ffb300;
         }
 
-        /* upcoming task */
+        /*------------- Upcoming task -------------*/
         #next-task {
             background-color: #f6f6f6;
-            border: 2px solid #c1c1c1;
+            border: 2px double #e4e4e4;
             border-radius: 8px;
             padding: 16px;
             margin-bottom: 24px;
         }
-
-        /* header of "To Complete" (h2) */
+        /* upcoming task header (h2) */
         #next-task h2 {
             font-family: "Short Stack", cursive;
             font-weight: 400;
@@ -96,21 +126,21 @@
             color: #666;
             margin: 0 0 8px 0;
         }
-
         /* content of upcoming task */
         #next-task-content {
             font-size: 18px;
             font-weight: 600;
         }
 
-        /* collective list of tasks */
+        /*------------- List of Tasks -------------*/
         #task-list {
             list-style: none;       /* remove bullets */
             padding: 0;
             margin: 0;
+            max-height: 300px;
+            overflow-y: auto;        /* scrollbar if content overflows */
         }
-
-        /* individual tasks in task list */
+        /* individual tasks */
         #task-list li {
             font-family: "Cantarell", sans-serif;
             font-weight: lighter;
@@ -124,12 +154,11 @@
             padding: 12px;
             margin-bottom: 8px;
         }
-
         #task-list li span {
             flex: 1;                /* take up remaining space, pushing buttons right */
         }
 
-        /* buttons of each task */
+        /* complete/delete buttons */
         #task-list button {
             font-family: "Short Stack", cursive;
             padding: 4px 10px;
@@ -138,14 +167,12 @@
             font-size: 12px;
             cursor: pointer;
         }
-
         .complete-btn {
-            background-color: #ecebeb;
+            background-color: #a9ffa9;
         }
         .complete-btn:hover {
-            background-color: #e1e1e1;
+            background-color: #9be89a;
         }
-
         .delete-btn {
             background-color: #f19898;
         }
@@ -161,26 +188,31 @@
 <main class="container">
     <h1>Momentum</h1>
 
-<!--actual content-->
-    <div class="task-body">
-        <!--HTML form for adding task (user input container)-->
-        <form id="add-task-form" autocomplete="off">
-            <input type="text" id="title-input" placeholder="Task title" required>
-            <input type="text" id="category-input" placeholder="Category">
-            <input type="datetime-local" id="deadline-input" required>
-            <button type="submit">Add</button>
-        </form>
+<!--content-->
+    <div class="task-content">
+       <!--tasks body-->
+        <div class="task-column">
+            <!--upcoming task-->
+            <section id="next-task">
+                <h2>To Complete</h2>
+                <div id="next-task-content">Loading...</div>
+            </section>
 
-        <!--Shows the upcoming task with the soonest deadline-->
-        <section id="next-task">
-            <h2>To Complete</h2>
-            <div id="next-task-content">Loading...</div>
-        </section>
+            <ul id="task-list"></ul>
+        </div>
 
-        <ul id="task-list"></ul>
+        <!--HTML form for adding task-->
+        <aside class="form-column">
+            <form id="add-task-form" autocomplete="off">
+                <input type="text" id="title-input" placeholder="Task title" required>
+                <input type="text" id="category-input" placeholder="Category">
+                <input type="datetime-local" id="deadline-input" required>
+                <button type="submit">Add</button>
+            </form>
+        </aside>
     </div>
-
 </main>
+
 <script>
     // ---------- State ----------
     let nextTaskTitle = null;
@@ -230,6 +262,10 @@
             } else {
                 content.textContent = `${nextTaskTitle} — due in ${minutes} minute${minutes === 1 ? '' : 's'}`;
             }
+        //1+ days
+        } else if (minutes > 60 * 24) {
+            const days = Math.floor(minutes / (60 * 24));
+            content.textContent = `${nextTaskTitle} — due in ${days} day${days === 1 ? '' : 's'}`;
         } else {
         //one or more hours
             const hours = Math.floor(minutes / 60);
@@ -243,6 +279,10 @@
         // testing purposes
         // const data = {
         //     tasks: [
+        //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
+        //         { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
+        //         { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
+        //         { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
         //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
         //         { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
         //         { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
