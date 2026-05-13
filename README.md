@@ -50,6 +50,8 @@ Then open [http://localhost:8080] in your browser.
 - [ ] Edit existing tasks
 - [ ] Filter by category
 - [ ] Online sync / multi-device support
+- [ ] classification creating and drop-down
+- [ ] faster date UI
 
 ## Notes for self
 - Plan for possible AI implementations
