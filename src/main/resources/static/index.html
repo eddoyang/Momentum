@@ -408,9 +408,9 @@
         const localDeadline = document.getElementById('edit-deadline-input').value;
         const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
 
-        await fetch('/api/tasks/${editingTaskId}', {
+        await fetch(`/api/tasks`, {
             method: 'PATCH',
-            headers: {'Content-Type': 'applications/json'},
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({id: editingTaskId, title, deadline})
         });
 
