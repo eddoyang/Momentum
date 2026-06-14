@@ -385,7 +385,10 @@
 
     let editingTaskId = null;
 
-   function editTask(taskId, currentTitle, currentDeadline) {
+
+    // ---------- Edit Form ----------
+
+    function editTask(taskId, currentTitle, currentDeadline) {
         editingTaskId = taskId;
         document.getElementById('edit-title-input').value = currentTitle;
 
@@ -393,6 +396,28 @@
         document.getElementById('edit-deadline-input').value = new Date(cleaned).toISOString().slice(0, 16);
         document.getElementById('edit-modal').classList.add('visible');
     }
+
+    // Cancel Edits
+    document.getElementById('edit-cancel-btn').addEventListener('click', () => {
+        document.getElementById('edit-modal').classList.remove('visible');
+    });
+
+    // Save Edits
+    document.getElementById('edit-save-btn').addEventListener('click', async () => {
+        const title = document.getElementById('edit-title-input').value;
+        const localDeadline = document.getElementById('edit-deadline-input').value;
+        const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
+
+        await fetch('/api/tasks/${editingTaskId}', {
+            method: 'PATCH',
+            headers: {'Content-Type': 'applications/json'},
+            body: JSON.stringify({id: editingTaskId, title, deadline})
+        });
+
+        document.getElementById('edit-modal').classList.remove('visible');
+        loadTasks();
+        loadNextTask();
+    });
 
     // ---------- Form submission ----------
     document.getElementById('add-task-form').addEventListener('submit', async (e) => {
