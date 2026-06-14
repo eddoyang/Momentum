@@ -36,6 +36,16 @@ public class TaskController {
         taskManager.addTask(new Task(id, title, category, isComplete, deadline));
     }
 
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void editTask(@RequestBody String body) {
+        JSONObject json = new JSONObject(body);
+        UUID id = UUID.fromString(json.getString("id"));
+        String title = json.getString("title");
+        String category = json.optString("category", null);
+        ZonedDateTime deadline = ZonedDateTime.parse(json.getString("deadline"));
+        taskManager.editTask(id, title, category, deadline);
+    }
+
     @PatchMapping("/{id}/complete")
     public void markComplete(@PathVariable UUID id) {
         taskManager.markAsComplete(id);
@@ -50,5 +60,4 @@ public class TaskController {
     public String getNextTask() {
         return taskManager.getNextTask().toString();
     }
-
 }

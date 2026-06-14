@@ -123,6 +123,17 @@ public class TaskManager {
         return new JSONObject();
     }
 
+    public void editTask(UUID id, String title, String category, ZonedDateTime deadline) {
+        Task task = taskMap.get(id);
+
+        if (task == null) {
+            return;
+        }
+
+        task.setTitle(title);
+        task.setCategory(category);
+        task.setDeadline(deadline);
+    }
     //---------------- Getter/Setters ----------------
     public Map<UUID, Task> getTaskMap() {
         return taskMap;

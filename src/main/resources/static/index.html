@@ -167,6 +167,7 @@
             font-size: 12px;
             cursor: pointer;
         }
+
         .complete-btn {
             background-color: #a9ffa9;
         }
@@ -179,6 +180,19 @@
         .delete-btn:hover {
             background-color: #dd8c8c;
         }
+
+        .edit-btn {
+            background-color: #ffcf76;
+        }
+        .edit-btn:hover {
+            background-color: #edc16d;
+        }
+
+        /* hide the modal until editTask() is called */
+        #edit-modal { display: none; }
+        #edit-modal.visible { display: flex; }
+
+
 
     </style>
 </head>
@@ -199,6 +213,18 @@
             </section>
 
             <ul id="task-list"></ul>
+        </div>
+
+        <div id="edit-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center;">
+            <div style="background:white; border-radius:15px; padding:32px; width:320px; display:flex; flex-direction:column; gap:12px;">
+                <h2 style="margin:0; font-size:18px;">Edit Task</h2>
+                <input type="text" id="edit-title-input" placeholder="Task title">
+                <input type="datetime-local" id="edit-deadline-input">
+                <div style="display:flex; gap:8px; justify-content:flex-end;">
+                    <button id="edit-cancel-btn">Cancel</button>
+                    <button id="edit-save-btn">Save</button>
+                </div>
+            </div>
         </div>
 
         <!--HTML form for adding task-->
@@ -318,6 +344,13 @@
             deleteButton.addEventListener('click', () => deleteTask(task.id));
             li.appendChild(deleteButton);
 
+            //edit button
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.classList.add('edit-btn');
+            editButton.addEventListener('click', () => editTask(task.id, task.title, task.deadline));
+            li.appendChild(editButton);
+
             list.appendChild(li);
         }
     }
@@ -350,6 +383,17 @@
         loadNextTask();
     }
 
+    let editingTaskId = null;
+
+   function editTask(taskId, currentTitle, currentDeadline) {
+        editingTaskId = taskId;
+        document.getElementById('edit-title-input').value = currentTitle;
+
+        const cleaned = currentDeadline.replace(/\[.*\]/, '');
+        document.getElementById('edit-deadline-input').value = new Date(cleaned).toISOString().slice(0, 16);
+        document.getElementById('edit-modal').classList.add('visible');
+    }
+
     // ---------- Form submission ----------
     document.getElementById('add-task-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -357,7 +401,7 @@
         const title = document.getElementById('title-input').value;
         const category = document.getElementById('category-input').value || null;
         const localDeadline = document.getElementById('deadline-input').value;
-        // datetime-local gives "2026-04-25T14:00" — convert to backend ZonedDateTime format
+
         const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
 
         const body = {
@@ -377,6 +421,7 @@
         loadTasks();
         loadNextTask();
     });
+
 
     // ---------- Init ----------
     loadTasks();
