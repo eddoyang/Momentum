@@ -130,9 +130,23 @@ public class TaskManager {
             return;
         }
 
+        ZonedDateTime oldBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
+        List<UUID> bucket = hourlySchedule.get(oldBucket);
+        if (bucket != null) {
+            bucket.remove(id);
+            if (bucket.isEmpty()) {
+                hourlySchedule.remove(oldBucket);
+            }
+        }
+
         task.setTitle(title);
         task.setCategory(category);
         task.setDeadline(deadline);
+
+        ZonedDateTime newBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
+        hourlySchedule.computeIfAbsent(newBucket, k -> new ArrayList<>()).add(id);
+
+        saveToDisk();
     }
     //---------------- Getter/Setters ----------------
     public Map<UUID, Task> getTaskMap() {
