@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Momo+Trust+Display&family=Short+Stack&display=swap" rel="stylesheet">
 
-    <!-- calender  -->
+    <!-- calendar  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
 
@@ -225,7 +225,7 @@
             <div style="background:white; border-radius:15px; padding:32px; width:320px; display:flex; flex-direction:column; gap:12px;">
                 <h2 style="margin:0; font-size:18px;">Edit Task</h2>
                 <input type="text" id="edit-title-input" placeholder="Task title">
-                <input type="datetime-local" id="edit-deadline-input">
+                <input type="text" id="edit-deadline-input" placeholder="Deadline">
                 <div style="display:flex; gap:8px; justify-content:flex-end;">
                     <button id="edit-cancel-btn">Cancel</button>
                     <button id="edit-save-btn">Save</button>
@@ -349,7 +349,7 @@
     const deadlinePicker = flatpickr("#deadline-input", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        time_24hr: true
+        time_24hr: false
     });
 
     // ---------- API actions ----------
@@ -365,17 +365,18 @@
         loadNextTask();
     }
 
-    let editingTaskId = null;
 
 
     // ---------- Edit Form ----------
+    let editingTaskId = null;
 
     function editTask(taskId, currentTitle, currentDeadline) {
         editingTaskId = taskId;
         document.getElementById('edit-title-input').value = currentTitle;
 
         const cleaned = currentDeadline.replace(/\[.*\]/, '');
-        document.getElementById('edit-deadline-input').value = new Date(cleaned).toISOString().slice(0, 16);
+        editDeadlinePicker.setDate(new Date(cleaned));
+
         document.getElementById('edit-modal').classList.add('visible');
     }
 
@@ -387,8 +388,7 @@
     // Save Edits
     document.getElementById('edit-save-btn').addEventListener('click', async () => {
         const title = document.getElementById('edit-title-input').value;
-        const localDeadline = document.getElementById('edit-deadline-input').value;
-        const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
+        const deadline = editDeadlinePicker.selectedDates[0].toISOString().replace('Z', 'Z[UTC]');
 
         await fetch(`/api/tasks`, {
             method: 'PATCH',
@@ -411,6 +411,13 @@
         } else {
             newInput.style.display = 'none';
         }
+    });
+
+    // edit -> deadline calendar
+    const editDeadlinePicker = flatpickr("#edit-deadline-input", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: false
     });
 
     // ---------- Form submission ----------
