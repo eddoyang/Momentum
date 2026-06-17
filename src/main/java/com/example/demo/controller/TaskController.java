@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Task;
 import com.example.demo.model.TaskManager;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -46,18 +47,29 @@ public class TaskController {
         taskManager.editTask(id, title, category, deadline);
     }
 
+    /* endpoint for existing tasks */
+    @GetMapping("/next")
+    public String getNextTask() {
+        return taskManager.getNextTask().toString();
+    }
+
+    /* endpoint for marking existing tasks */
     @PatchMapping("/{id}/complete")
     public void markComplete(@PathVariable UUID id) {
         taskManager.markAsComplete(id);
     }
 
+    /* endpoint for deleting existing tasks */
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable UUID id) {
         taskManager.removeTask(id);
     }
 
-    @GetMapping("/next")
-    public String getNextTask() {
-        return taskManager.getNextTask().toString();
+    /* endpoint for existing categories */
+    @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getCategories() {
+        JSONArray categories = new JSONArray();
+        taskManager.getCategoryMap().keySet().stream().sorted().forEach(categories::put);
+        return new JSONObject().put("categories", categories).toString();
     }
 }

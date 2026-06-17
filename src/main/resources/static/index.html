@@ -89,6 +89,7 @@
 
         /* Task info boxes */
         #add-task-form input,
+        #add-task-form select,
         #add-task-form button {
             padding: 8px;   /* size of border/boxes */
             background-color: #f6f6f6;
@@ -97,6 +98,7 @@
             font-size: 14px;     /* size of text font */
             font-family: inherit;  /* match the body font */
         }
+
         /* Task add button */
         #add-task-form button {
             background-color: #face5c;
@@ -231,8 +233,12 @@
         <aside class="form-column">
             <form id="add-task-form" autocomplete="off">
                 <input type="text" id="title-input" placeholder="Task title" required>
-                <input type="text" id="category-input" placeholder="Category">
                 <input type="datetime-local" id="deadline-input" required>
+                <select id="category-select">
+                    <option value="">No category</option>
+                    <option value="__new__">+</option>
+                </select>
+                <input type="text" id="category-new-input" placeholder="New category name" style="display:none;">
                 <button type="submit">Add</button>
             </form>
         </aside>
@@ -243,61 +249,6 @@
     // ---------- State ----------
     let nextTaskTitle = null;
     let nextTaskDeadline = null;
-
-    // ---------- Helpers ----------
-    function formatDeadline(isoString) {
-        const cleaned = isoString.replace(/\[.*\]/, '');
-        const date = new Date(cleaned);
-
-        const datePart = date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-        });
-
-        const hour = date.getHours().toString().padStart(2, '0');
-        const minute = date.getMinutes().toString().padStart(2, '0');
-        const timePart = `${hour}:${minute}`;
-
-        return `${datePart} (${timePart})`;
-    }
-
-    function updateCountdown() {
-        const content = document.getElementById('next-task-content');
-
-        //no tasks
-        if (!nextTaskDeadline) {
-            content.textContent = 'No upcoming tasks';
-            return;
-        }
-
-        const diff = nextTaskDeadline - new Date();
-
-        //overdue
-        if (diff < 0) {
-            content.textContent = `${nextTaskTitle} — overdue`;
-            return;
-        }
-
-        const minutes = Math.floor(diff / 60000);
-
-        //less than an hour
-        if (minutes < 60) {
-            if (minutes === 0) {
-                content.textContent = `${nextTaskTitle} — due in less than a minute`;
-            } else {
-                content.textContent = `${nextTaskTitle} — due in ${minutes} minute${minutes === 1 ? '' : 's'}`;
-            }
-        //1+ days
-        } else if (minutes > 60 * 24) {
-            const days = Math.floor(minutes / (60 * 24));
-            content.textContent = `${nextTaskTitle} — due in ${days} day${days === 1 ? '' : 's'}`;
-        } else {
-        //one or more hours
-            const hours = Math.floor(minutes / 60);
-            content.textContent = `${nextTaskTitle} — due in ${hours} hour${hours === 1 ? '' : 's'}`;
-        }
-    }
 
     // ---------- Rendering ----------
     async function loadTasks() {
@@ -370,6 +321,27 @@
         updateCountdown();
     }
 
+    async function loadCategories() {
+        const response = await fetch('/api/tasks/categories');
+        const data = await response.json();
+
+        const select = document.getElementById('category-select');
+        const previous = select.value;
+
+        select.innerHTML = '';
+        select.appendChild(new Option('No category', ''));
+
+        for (const category of data.categories) {
+            select.appendChild(new Option(category, category));
+        }
+        select.appendChild(new Option('+', '__new__'));
+
+        // restore prior selection if exists
+        if ([...select.options].some(option => option.value === previous)) {
+            select.value = previous;
+        }
+    }
+
     // ---------- API actions ----------
     async function completeTask(taskId) {
         await fetch(`/api/tasks/${taskId}/complete`, { method: 'PATCH' });
@@ -419,12 +391,32 @@
         loadNextTask();
     });
 
+    // Add Category Textbox
+    document.getElementById('category-select').addEventListener('change', (e) => {
+        const newInput = document.getElementById('category-new-input');
+
+        if (e.target.value === '__new__') {
+            newInput.style.display = '';
+            newInput.focus();
+        } else {
+            newInput.style.display = 'none';
+        }
+    });
+
     // ---------- Form submission ----------
     document.getElementById('add-task-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const title = document.getElementById('title-input').value;
-        const category = document.getElementById('category-input').value || null;
+
+        const categorySelect = document.getElementById('category-select');
+        let category;
+        if (categorySelect.value === '__new__') {
+            category = document.getElementById('category-new-input').value.trim() || null;
+        } else {
+            category = categorySelect.value || null;
+        }
+
         const localDeadline = document.getElementById('deadline-input').value;
 
         const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
@@ -443,14 +435,72 @@
         });
 
         e.target.reset();
+        document.getElementById('category-new-input').style.display = 'none';
         loadTasks();
         loadNextTask();
+        loadCategories();
     });
+
+    // ---------- Helpers ----------
+    function formatDeadline(isoString) {
+        const cleaned = isoString.replace(/\[.*\]/, '');
+        const date = new Date(cleaned);
+
+        const datePart = date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        const timePart = `${hour}:${minute}`;
+
+        return `${datePart} (${timePart})`;
+    }
+
+    function updateCountdown() {
+        const content = document.getElementById('next-task-content');
+
+        //no tasks
+        if (!nextTaskDeadline) {
+            content.textContent = 'No upcoming tasks';
+            return;
+        }
+
+        const diff = nextTaskDeadline - new Date();
+
+        //overdue
+        if (diff < 0) {
+            content.textContent = `${nextTaskTitle} — overdue`;
+            return;
+        }
+
+        const minutes = Math.floor(diff / 60000);
+
+        //less than an hour
+        if (minutes < 60) {
+            if (minutes === 0) {
+                content.textContent = `${nextTaskTitle} — due in less than a minute`;
+            } else {
+                content.textContent = `${nextTaskTitle} — due in ${minutes} minute${minutes === 1 ? '' : 's'}`;
+            }
+            //1+ days
+        } else if (minutes > 60 * 24) {
+            const days = Math.floor(minutes / (60 * 24));
+            content.textContent = `${nextTaskTitle} — due in ${days} day${days === 1 ? '' : 's'}`;
+        } else {
+            //one or more hours
+            const hours = Math.floor(minutes / 60);
+            content.textContent = `${nextTaskTitle} — due in ${hours} hour${hours === 1 ? '' : 's'}`;
+        }
+    }
 
 
     // ---------- Init ----------
     loadTasks();
     loadNextTask();
+    loadCategories();
     setInterval(updateCountdown, 60000);
 </script>
 </body>
