@@ -3,10 +3,14 @@
 
 <!--Metadata of html/page-->
 <head>
-    <!--font library -->
+    <!-- font library -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Momo+Trust+Display&family=Short+Stack&display=swap" rel="stylesheet">
+
+    <!-- calender  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
 
     <meta charset="UTF-8">
     <title>Momentum</title>
@@ -233,7 +237,7 @@
         <aside class="form-column">
             <form id="add-task-form" autocomplete="off">
                 <input type="text" id="title-input" placeholder="Task title" required>
-                <input type="datetime-local" id="deadline-input" required>
+                <input type="text" id="deadline-input" placeholder="Deadline" required>
                 <select id="category-select">
                     <option value="">No category</option>
                     <option value="__new__">+</option>
@@ -341,6 +345,12 @@
             select.value = previous;
         }
     }
+
+    const deadlinePicker = flatpickr("#deadline-input", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
 
     // ---------- API actions ----------
     async function completeTask(taskId) {
