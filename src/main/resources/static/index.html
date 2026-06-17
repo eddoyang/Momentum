@@ -27,8 +27,18 @@
 
         /* Momentum Header */
         h1 {
-            margin: 0 0 32px 0;               /* top-left, with spacing below */
+            margin: 0 0 4px 0;
             font-size: 28px;
+            line-height: 1.2;
+            text-align:left;
+        }
+
+        /* Momentum Subheader */
+        h2 {
+            margin: 0 0 32px 12px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
             line-height: 1.2;
         }
 
@@ -123,7 +133,7 @@
             margin-bottom: 24px;
         }
         /* upcoming task header (h2) */
-        #next-task h2 {
+        #next-task h3 {
             font-family: "Short Stack", cursive;
             font-weight: 400;
             font-style: normal;
@@ -207,6 +217,7 @@
 <body>
 <main class="container">
     <h1>Momentum</h1>
+    <h2>Personal Todo List</h2>
 
 <!--content-->
     <div class="task-content">
@@ -214,7 +225,7 @@
         <div class="task-column">
             <!--upcoming task-->
             <section id="next-task">
-                <h2>To Complete</h2>
+                <h3>To Complete</h3>
                 <div id="next-task-content">Loading...</div>
             </section>
 
@@ -223,7 +234,7 @@
 
         <div id="edit-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center;">
             <div style="background:white; border-radius:15px; padding:32px; width:320px; display:flex; flex-direction:column; gap:12px;">
-                <h2 style="margin:0; font-size:18px;">Edit Task</h2>
+                <h3 style="margin:0; font-size:18px;">Edit Task</h3>
                 <input type="text" id="edit-title-input" placeholder="Task title">
                 <input type="text" id="edit-deadline-input" placeholder="Deadline">
                 <div style="display:flex; gap:8px; justify-content:flex-end;">
