@@ -194,7 +194,12 @@ public class TaskManager {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("tasks", taskToJson());
+        json.put("categories", new JSONArray(categoryMap.keySet()));
         return json;
+    }
+
+    public void addCategoryWithoutSaving(String name) {
+        categoryMap.computeIfAbsent(name, k -> new HashSet<>());
     }
 
     @PostConstruct
