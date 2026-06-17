@@ -1,6 +1,6 @@
-package com.example.demo.persistence;
+package io.github.eddoyang.momentum.persistence;
 
-import com.example.demo.model.Task;
+import io.github.eddoyang.momentum.model.Task;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 

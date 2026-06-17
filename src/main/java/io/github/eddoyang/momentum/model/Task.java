@@ -1,6 +1,6 @@
-package com.example.demo.model;
+package io.github.eddoyang.momentum.model;
 
-import com.example.demo.persistence.Writable;
+import io.github.eddoyang.momentum.persistence.Writable;
 import org.json.JSONObject;
 
 import java.time.ZonedDateTime;

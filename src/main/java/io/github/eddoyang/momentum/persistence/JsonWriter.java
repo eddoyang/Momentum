@@ -1,12 +1,12 @@
-package com.example.demo.persistence;
+package io.github.eddoyang.momentum.persistence;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import io.github.eddoyang.momentum.model.TaskManager;
 import org.json.JSONObject;
 
-import com.example.demo.model.*;
 
 public class JsonWriter {
     private static final int TAB = 4;

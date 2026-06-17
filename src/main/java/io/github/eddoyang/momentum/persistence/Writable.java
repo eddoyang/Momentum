@@ -1,4 +1,4 @@
-package com.example.demo.persistence;
+package io.github.eddoyang.momentum.persistence;
 
 import org.json.JSONObject;
 

@@ -1,7 +1,7 @@
-package com.example.demo.persistence;
+package io.github.eddoyang.momentum.persistence;
+import io.github.eddoyang.momentum.model.Task;
+import io.github.eddoyang.momentum.model.TaskManager;
 import org.json.*;
-
-import com.example.demo.model.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
