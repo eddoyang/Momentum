@@ -85,6 +85,30 @@
             background-color: white;
         }
 
+        #category-tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid #ededed;
+        }
+        .category-tab {
+            font-family: "Short Stack", cursive;
+            font-size: 13px;
+            padding: 8px 16px;
+            border: 2px solid #ededed;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            background-color: #f6f6f6;
+            color: #888;
+            cursor: pointer;
+            margin-bottom: -2px;
+        }
+
+        .category-tab.active {
+            background-color: white;
+            color: black;
+            border-bottom: 2px solid white;
+        }
+
         /*------------- Task adding form -------------*/
         .form-column {
             width: 280px;
@@ -221,7 +245,8 @@
 
 <!--content-->
     <div class="task-content">
-       <!--tasks body-->
+
+        <!--tasks body-->
         <div class="task-column">
             <!--upcoming task-->
             <section id="next-task">
@@ -229,9 +254,11 @@
                 <div id="next-task-content">Loading...</div>
             </section>
 
+            <div id="category-tabs"></div>
             <ul id="task-list"></ul>
         </div>
 
+        <!--tasks display-->
         <div id="edit-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center;">
             <div style="background:white; border-radius:15px; padding:32px; width:320px; display:flex; flex-direction:column; gap:12px;">
                 <h3 style="margin:0; font-size:18px;">Edit Task</h3>
@@ -264,11 +291,13 @@
     // ---------- State ----------
     let nextTaskTitle = null;
     let nextTaskDeadline = null;
+    let allTasks = [];
+    let activeCategory = 'All';
 
     // ---------- Rendering ----------
     async function loadTasks() {
 
-        // testing purposes
+        // // testing purposes
         // const data = {
         //     tasks: [
         //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
