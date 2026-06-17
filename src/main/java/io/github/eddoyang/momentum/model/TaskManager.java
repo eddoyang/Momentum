@@ -23,7 +23,7 @@ public class TaskManager {
 
     //---------------- Methods ----------------
 
-    //Adds task to data structures
+    // Adds task to data structures
     public void addTask(Task task) {
         taskMap.put(task.getId(), task);
 
@@ -36,7 +36,7 @@ public class TaskManager {
         saveToDisk();
     }
 
-    //Adds task to data structures without writing to JSON (used for iterating tasks)
+    // Adds task to data structures without writing to JSON (used for iterating tasks)
     public void addTaskWithoutSaving(Task task) {
         taskMap.put(task.getId(), task);
 
@@ -48,7 +48,7 @@ public class TaskManager {
         }
     }
 
-    //Mark task as complete, remove from hourlySchedule and categoryMap
+    // Mark task as complete, remove from hourlySchedule and categoryMap
     public void markAsComplete(UUID taskId) {
         Task task = taskMap.get(taskId);
         if (task == null) {
@@ -73,16 +73,13 @@ public class TaskManager {
             Set<UUID> categorySet = categoryMap.get(task.getCategory());
             if (categorySet != null) {
                 categorySet.remove(taskId);
-                if (categorySet.isEmpty()) {
-                    categoryMap.remove(task.getCategory());
-                }
             }
         }
 
         saveToDisk();
     }
 
-    //Removes a task
+    // Removes a task
     public void removeTask(UUID taskId) {
         Task task = taskMap.remove(taskId);
         if (task == null) return;
@@ -100,16 +97,13 @@ public class TaskManager {
             Set<UUID> categorySet = categoryMap.get(task.getCategory());
             if (categorySet != null) {
                 categorySet.remove(taskId);
-                if (categorySet.isEmpty()) {
-                    categoryMap.remove(task.getCategory());
-                }
             }
         }
 
         saveToDisk();
     }
 
-    //Returns task with the closest deadline
+    // Returns task with the closest deadline
     public JSONObject getNextTask() {
         if (hourlySchedule.isEmpty()) return new JSONObject();
 
@@ -134,6 +128,7 @@ public class TaskManager {
 
         ZonedDateTime oldBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
         List<UUID> bucket = hourlySchedule.get(oldBucket);
+
         if (bucket != null) {
             bucket.remove(id);
             if (bucket.isEmpty()) {
@@ -150,6 +145,27 @@ public class TaskManager {
 
         saveToDisk();
     }
+
+    // Add category
+    public void addCategory(String name) {
+        categoryMap.computeIfAbsent(name, k -> new HashSet<>());
+        saveToDisk();
+    }
+
+    // Remove category
+    public void removeCategory(String name) {
+        Set<UUID> members = categoryMap.remove(name);
+        if(members != null) {
+            for (UUID id : members) {
+                Task task = taskMap.get(id);
+                if (task != null)
+                    task.setCategory(null);
+            }
+        }
+        saveToDisk();
+    }
+
+
     //---------------- Getter/Setters ----------------
     public Map<UUID, Task> getTaskMap() {
         return taskMap;
