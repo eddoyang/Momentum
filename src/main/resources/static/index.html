@@ -278,7 +278,6 @@
                 <input type="text" id="deadline-input" placeholder="Deadline" required>
                 <select id="category-select">
                     <option value="">No category</option>
-                    <option value="__new__">+</option>
                 </select>
                 <input type="text" id="category-new-input" placeholder="New category name" style="display:none;">
                 <button type="submit">Add</button>
@@ -408,7 +407,7 @@
 
     async function loadCategories() {
         const response = await fetch('/api/tasks/categories');
-        const data = await response.json();
+        const { categories } = await response.json();
 
         const select = document.getElementById('category-select');
         const previous = select.value;
@@ -416,16 +415,47 @@
         select.innerHTML = '';
         select.appendChild(new Option('No category', ''));
 
-        for (const category of data.categories) {
+        for (const category of categories) {
             select.appendChild(new Option(category, category));
         }
-        select.appendChild(new Option('+', '__new__'));
 
-        // restore prior selection if exists
-        if ([...select.options].some(option => option.value === previous)) {
-            select.value = previous;
+        const list = document.getElementById('category-list');
+        list.innerHTML = '';
+
+        for (const category of categories) {
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            span,textContent = c;
+            const del = document.createElement('button');
+            del.textContent = c;
+            del.addEventListener('click', () => deleteCategory(c));
+            li.append(span, del);
+            list.appendChild(li);
         }
     }
+
+    document.getElementById('add-category-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('category-name-input').value.trim();
+
+        if (!name)
+            return;
+
+        await fetch('/api/tasks/categories', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name})
+        });
+        e.target.reset();
+        loadCategories();
+    });
+
+    async function deleteCategory(name) {
+        await fetch('/api/tasks/categories/${encodeURIComponent(name)}', { method: 'DELETE'});
+        loadCategories();
+        loadTasks();
+    }
+
 
     const deadlinePicker = flatpickr("#deadline-input", {
         enableTime: true,
@@ -482,18 +512,6 @@
         loadNextTask();
     });
 
-    // Add Category Textbox
-    document.getElementById('category-select').addEventListener('change', (e) => {
-        const newInput = document.getElementById('category-new-input');
-
-        if (e.target.value === '__new__') {
-            newInput.style.display = '';
-            newInput.focus();
-        } else {
-            newInput.style.display = 'none';
-        }
-    });
-
     // edit -> deadline calendar
     const editDeadlinePicker = flatpickr("#edit-deadline-input", {
         enableTime: true,
@@ -507,13 +525,7 @@
 
         const title = document.getElementById('title-input').value;
 
-        const categorySelect = document.getElementById('category-select');
-        let category;
-        if (categorySelect.value === '__new__') {
-            category = document.getElementById('category-new-input').value.trim() || null;
-        } else {
-            category = categorySelect.value || null;
-        }
+        const category = document.getElementById('category-select').value || null;
 
         const localDeadline = document.getElementById('deadline-input').value;
 
@@ -533,7 +545,6 @@
         });
 
         e.target.reset();
-        document.getElementById('category-new-input').style.display = 'none';
         loadTasks();
         loadNextTask();
         loadCategories();
