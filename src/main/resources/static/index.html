@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
 
+    <!-- drag interaction -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
     <meta charset="UTF-8">
     <title>Momentum</title>
     <style>
@@ -389,6 +392,7 @@
     let allTasks = [];
     let activeCategory = 'All';
     let allCategories = [];
+    let tabSortable = null;
 
     // ---------- Rendering ----------
     async function loadTasks() {
@@ -427,12 +431,29 @@
             const tab = document.createElement('button');
             tab.textContent = category;
             tab.classList.add('category-tab');
+
+            if (category === 'All')
+                tab.dataset.fixed = 'true';
+
             if (category === activeCategory) tab.classList.add('active');
             tab.addEventListener('click', () => {
                 activeCategory = category;
                 renderTabs();
                 renderTaskList();
             });
+
+            if (tabSortable) tabSortable.destroy();
+            tabSortable = new Sortable(tabBar, {
+                animation: 150,
+                filter: '[data-fixed]',
+                onMove: (evt) => !evt.related.dataset.fixed,
+                onEnd: () => {
+                    allCategories = [...tabBar.querySelectorAll('.category-tab')]
+                        .map(t => t.textContent)
+                        .filter(name => name !== 'All');
+                }
+            });
+
             tabBar.appendChild(tab);
         }
     }
