@@ -211,6 +211,10 @@ public class TaskManager {
             for (Task task : loaded.getTaskMap().values()) {
                 this.addTaskWithoutSaving(task);
             }
+
+            for (String category : loaded.getCategoryMap().keySet()) {
+                this.addCategoryWithoutSaving(category);
+            }
         } catch (IOException e) {
             System.out.println("No existing load file, creating new...");
         }
