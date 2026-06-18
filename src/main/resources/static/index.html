@@ -425,10 +425,10 @@
         for (const category of categories) {
             const li = document.createElement('li');
             const span = document.createElement('span');
-            span,textContent = c;
+            span.textContent = category;
             const del = document.createElement('button');
-            del.textContent = c;
-            del.addEventListener('click', () => deleteCategory(c));
+            del.textContent = 'x'
+            del.addEventListener('click', () => deleteCategory(category));
             li.append(span, del);
             list.appendChild(li);
         }
@@ -451,7 +451,7 @@
     });
 
     async function deleteCategory(name) {
-        await fetch('/api/tasks/categories/${encodeURIComponent(name)}', { method: 'DELETE'});
+        await fetch(`/api/tasks/categories/${encodeURIComponent(name)}`, { method: 'DELETE' });
         loadCategories();
         loadTasks();
     }
