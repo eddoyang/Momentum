@@ -148,6 +148,54 @@
             background-color: #ffb300;
         }
 
+        /* Add category button */
+        #add-category-form button {
+            padding: 8px;
+            border: none;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #face5c;
+            cursor: pointer;
+        }
+
+        #add-category-form button:hover {
+            background-color: #ffb300;
+        }
+
+        /* Category lists */
+        #category-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        #category-list li {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        #category-list li span {
+            flex: 1;          /* name takes the leftover space, shoving the button right */
+        }
+
+        /* Category lists: delete */
+        #category-list button {
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 14px;
+            color: #ffffff;
+            background-color: #dd8c8c;
+            cursor: pointer;
+        }
+
+        #category-list button:hover {
+            background-color: #f19898;
+        }
+
+
         /*------------- Upcoming task -------------*/
         #next-task {
             background-color: #f6f6f6;
@@ -285,7 +333,7 @@
 
             <form id="add-category-form" autocomplete="off">
                 <input type="text" id="category-name-input" placeholder="New category" required>
-                <button type="submit">Add Category</button>
+                <button type="submit">+ Category</button>
             </form>
             <ul id="category-list"></ul>
         </aside>
@@ -573,7 +621,7 @@
 
         //no tasks
         if (!nextTaskDeadline) {
-            content.textContent = 'No upcoming tasks';
+            content.textContent = 'None!';
             return;
         }
 
