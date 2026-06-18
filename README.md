@@ -43,10 +43,5 @@ From the project root:
 
 Then open [http://localhost:8080] in your browser.
 
-## Roadmap
-
-- [ ] Live countdown to deadlines (frontend)
-- [ ] Visual urgency colors based on time remaining
-- [ ] Online sync / multi-device support
 
 
