@@ -47,12 +47,6 @@ Then open [http://localhost:8080] in your browser.
 
 - [ ] Live countdown to deadlines (frontend)
 - [ ] Visual urgency colors based on time remaining
-- [ ] Edit existing tasks
-- [ ] Filter by category
 - [ ] Online sync / multi-device support
-- [ ] classification creating and drop-down
-- [ ] faster date UI
 
-## Notes for self
-- Plan for possible AI implementations
 
