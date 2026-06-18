@@ -1,6 +1,5 @@
 package io.github.eddoyang.momentum.persistence;
 
-import com.example.demo.model.*;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

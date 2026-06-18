@@ -40,6 +40,7 @@ public class JsonReader {
     private TaskManager parseTaskManager(JSONObject jsonObject) {
         TaskManager taskManager = new TaskManager();
         addTasks(taskManager, jsonObject);
+        addCategories(taskManager, jsonObject);
         return taskManager;
     }
     private void addTasks(TaskManager taskManager, JSONObject jsonObject) {
