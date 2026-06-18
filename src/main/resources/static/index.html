@@ -388,6 +388,7 @@
     let nextTaskDeadline = null;
     let allTasks = [];
     let activeCategory = 'All';
+    let allCategories = [];
 
     // ---------- Rendering ----------
     async function loadTasks() {
@@ -410,7 +411,6 @@
         const response = await fetch('/api/tasks');
         const data = await response.json();
         allTasks = data.tasks;
-        renderTabs();
         renderTaskList();
     }
 
@@ -418,7 +418,7 @@
         const tabBar = document.getElementById('category-tabs');
         tabBar.innerHTML = '';
 
-        const categories = ['All', ...new Set(allTasks.map(t => t.category || 'Uncategorized'))];
+        const categories = ['All', ...allCategories];
 
         // fall back to ALL if no categories
         if (!categories.includes(activeCategory)) activeCategory = 'All';
@@ -496,6 +496,9 @@
     async function loadCategories() {
         const response = await fetch('/api/tasks/categories');
         const { categories } = await response.json();
+
+        allCategories = categories;
+        renderTabs();
 
         const select = document.getElementById('category-select');
         const previous = select.value;
