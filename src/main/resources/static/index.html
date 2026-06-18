@@ -443,14 +443,21 @@
             });
 
             if (tabSortable) tabSortable.destroy();
+
             tabSortable = new Sortable(tabBar, {
                 animation: 150,
                 filter: '[data-fixed]',
                 onMove: (evt) => !evt.related.dataset.fixed,
-                onEnd: () => {
-                    allCategories = [...tabBar.querySelectorAll('.category-tab')]
+                onEnd: async () => {
+                    const order = [...tabBar.querySelectorAll('.category-tab')]
                         .map(t => t.textContent)
                         .filter(name => name !== 'All');
+                    allCategories = order;
+                    await fetch('/api/tasks/categories/order', {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({order})
+                    });
                 }
             });
 

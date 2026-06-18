@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.UUID;
 
 @RestController
@@ -69,7 +70,7 @@ public class TaskController {
     @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCategories() {
         JSONArray categories = new JSONArray();
-        taskManager.getCategoryMap().keySet().stream().sorted().forEach(categories::put);
+        taskManager.getCategoryMap().keySet().stream().forEach(categories::put);
         return new JSONObject().put("categories", categories).toString();
     }
 
@@ -83,5 +84,17 @@ public class TaskController {
     @DeleteMapping("/categories/{name}")
     public void deleteCategory(@PathVariable String name) {
         taskManager.removeCategory(name);
+    }
+
+    /* endpoint for sorting category tabs */
+    @PutMapping(value = "/categories/order", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void reorderCategories(@RequestBody String body) {
+        JSONArray order = new JSONObject(body).getJSONArray("order");
+        List<String> names = new ArrayList<>();
+
+        for (Object name : order)
+            names.add((String) name);
+
+        taskManager.reorderCategories(names);
     }
 }

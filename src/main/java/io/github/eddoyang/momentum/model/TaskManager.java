@@ -16,7 +16,7 @@ import jakarta.annotation.*;
 public class TaskManager {
 
     private Map<UUID, Task> taskMap = new HashMap<>();
-    private Map<String, Set<UUID>> categoryMap = new HashMap<>();
+    private Map<String, Set<UUID>> categoryMap = new LinkedHashMap<>();
     private TreeMap<ZonedDateTime, List<UUID>> hourlySchedule = new TreeMap<>();
 
     private static final String DATA_FILE = "data/momentum.json";
@@ -165,6 +165,21 @@ public class TaskManager {
         saveToDisk();
     }
 
+    // Reordering category tabs
+    public void reorderCategories(List<String> order) {
+        LinkedHashMap<String, Set<UUID>> reordered = new LinkedHashMap<>();
+
+        for (String name : order) {
+            if (categoryMap.containsKey(name)) reordered.put(name, categoryMap.get(name));
+        }
+
+        for (String name : categoryMap.keySet()) {
+            reordered.putIfAbsent(name, categoryMap.get(name));
+        }
+
+        categoryMap = reordered;
+        saveToDisk();
+    }
 
     //---------------- Getter/Setters ----------------
     public Map<UUID, Task> getTaskMap() {
@@ -208,13 +223,14 @@ public class TaskManager {
             JsonReader reader = new JsonReader(DATA_FILE);
             TaskManager loaded = reader.read();
 
+            for (String category : loaded.getCategoryMap().keySet()) {
+                this.addCategoryWithoutSaving(category);
+            }
+
             for (Task task : loaded.getTaskMap().values()) {
                 this.addTaskWithoutSaving(task);
             }
 
-            for (String category : loaded.getCategoryMap().keySet()) {
-                this.addCategoryWithoutSaving(category);
-            }
         } catch (IOException e) {
             System.out.println("No existing load file, creating new...");
         }
