@@ -72,4 +72,16 @@ public class TaskController {
         taskManager.getCategoryMap().keySet().stream().sorted().forEach(categories::put);
         return new JSONObject().put("categories", categories).toString();
     }
+
+    /* endpoint for creating categories */
+    @PostMapping(value = "/categories", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void addCateogry(@RequestBody String body) {
+        taskManager.addCategory(new JSONObject(body).getString("name"));
+    }
+
+    /* endpoint for deleting categories */
+    @DeleteMapping("/categories/{name}")
+    public void deleteCategory(@PathVariable String name) {
+        taskManager.removeCategory(name);
+    }
 }
