@@ -45,10 +45,11 @@ public class JsonReader {
     }
     private void addTasks(TaskManager taskManager, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("tasks");
+
         for (Object json : jsonArray) {
             JSONObject taskJson = (JSONObject) json;
             Task task = parseTask(taskJson);
-            taskManager.addTask(task);
+            taskManager.addTaskWithoutSaving(task);
         }
     }
 
