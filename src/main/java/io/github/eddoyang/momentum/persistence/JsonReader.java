@@ -60,4 +60,11 @@ public class JsonReader {
 
         return new Task(id, title, category, isComplete, deadline);
     }
+
+    private void addCategories(TaskManager taskManager, JSONObject jsonObject) {
+        JSONArray categories = jsonObject.optJSONArray("categories");
+        if (categories != null) {
+            for (Object name : categories) taskManager.addCategoryWithoutSaving((String) name);
+        }
+    }
 }
