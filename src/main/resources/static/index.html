@@ -76,8 +76,11 @@
             /*background-color: #f6f6f6;*/
         }
 
+
+
+
         /*------------- Tasks body -------------*/
-        .task-column {
+        .task-panel {
             flex: 1;                  /* take all remaining space */
             border: 1px solid #ffffff;
             border-radius: 15px;
@@ -148,13 +151,25 @@
             background-color: #ffb300;
         }
 
+        /*------------- Category form -------------*/
+        .category-panel {
+            flex-direction: column;
+            display: flex;              /* lay elements row format (default) */
+            gap: 8px;                   /* gap between elements */
+            margin-bottom: 24px;        /* gap between task form and list */
+            background-color: white;
+            border: 1px solid #dddfff;
+            border-radius: 15px;
+            padding: 16px;
+        }
+
         /* Add category button */
         #add-category-form button {
             padding: 8px;
             border: none;
             border-radius: 15px;
             font-family: inherit;
-            font-size: 16px;
+            font-size: 10px;
             color: #ffffff;
             background-color: #face5c;
             cursor: pointer;
@@ -170,6 +185,7 @@
             padding: 0;
             margin: 10px 0 0 0;
         }
+
         #category-list li {
             display: flex;
             align-items: center;
@@ -187,14 +203,31 @@
             padding: 4px 8px;
             font-size: 14px;
             color: #ffffff;
-            background-color: #dd8c8c;
+            background-color: #f19898;
             cursor: pointer;
         }
-
         #category-list button:hover {
-            background-color: #f19898;
+            background-color: #dd8c8c;
         }
 
+        /* category dropdown */
+        #category-dropdown {
+            margin-top: 4px;
+        }
+
+        #category-dropdown summary {
+            font-family: "Short Stack", cursive;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px 0;
+            list-style: none;
+        }
+        #category-dropdown summary::after {
+            content: " ▾";
+        }
+        #category-dropdown[open] summary::after {
+            content: " ▴";
+        }
 
         /*------------- Upcoming task -------------*/
         #next-task {
@@ -243,7 +276,7 @@
             margin-bottom: 8px;
         }
         #task-list li span {
-            flex: 1;                /* take up remaining space, pushing buttons right */
+            flex: 1;    /* take up remaining space, pushing buttons right */
         }
 
         /* complete/delete buttons */
@@ -295,7 +328,7 @@
     <div class="task-content">
 
         <!--tasks body-->
-        <div class="task-column">
+        <div class="task-panel">
             <!--upcoming task-->
             <section id="next-task">
                 <h3>To Complete</h3>
@@ -331,12 +364,18 @@
                 <button type="submit">Add</button>
             </form>
 
-            <form id="add-category-form" autocomplete="off">
-                <input type="text" id="category-name-input" placeholder="New category" required>
-                <button type="submit">+ Category</button>
-            </form>
-            <ul id="category-list"></ul>
+            <section class="category-panel">
+                <form id="add-category-form" autocomplete="off">
+                    <input type="text" id="category-name-input" placeholder="New category" required>
+                    <button type="submit">+ Category</button>
+                </form>
+                <details id="category-dropdown">
+                    <summary>Categories</summary>
+                    <ul id="category-list"></ul>
+                </details>
+            </section>
         </aside>
+
 
 
     </div>
