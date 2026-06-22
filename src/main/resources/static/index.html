@@ -349,6 +349,9 @@
                 <h3 style="margin:0; font-size:18px;">Edit Task</h3>
                 <input type="text" id="edit-title-input" placeholder="Task title">
                 <input type="text" id="edit-deadline-input" placeholder="Deadline">
+                <select id="edit-category-select">
+                    <option value="">No category</option>
+                </select>
                 <div style="display:flex; gap:8px; justify-content:flex-end;">
                     <button id="edit-cancel-btn">Cancel</button>
                     <button id="edit-save-btn">Save</button>
@@ -499,7 +502,7 @@
             const editButton = document.createElement('button');
             editButton.textContent = 'Edit';
             editButton.classList.add('edit-btn');
-            editButton.addEventListener('click', () => editTask(task.id, task.title, task.deadline));
+            editButton.addEventListener('click', () => editTask(task.id, task.title, task.deadline, task.category));
             li.appendChild(editButton);
 
             list.appendChild(li);
@@ -534,9 +537,17 @@
         select.innerHTML = '';
         select.appendChild(new Option('No category', ''));
 
+
+        const editSelect = document.getElementById('edit-category-select');
+
+        editSelect.innerHTML = '';
+        editSelect.appendChild(new Option('No category', ''));
+
         for (const category of categories) {
             select.appendChild(new Option(category, category));
+            editSelect.appendChild(new Option(category, category));
         }
+
 
         const list = document.getElementById('category-list');
         list.innerHTML = '';
@@ -600,13 +611,14 @@
     // ---------- Edit Form ----------
     let editingTaskId = null;
 
-    function editTask(taskId, currentTitle, currentDeadline) {
+    function editTask(taskId, currentTitle, currentDeadline, currentCategory) {
         editingTaskId = taskId;
         document.getElementById('edit-title-input').value = currentTitle;
 
         const cleaned = currentDeadline.replace(/\[.*\]/, '');
         editDeadlinePicker.setDate(new Date(cleaned));
 
+        document.getElementById('edit-category-select').value = currentCategory || '';
         document.getElementById('edit-modal').classList.add('visible');
     }
 
@@ -619,11 +631,12 @@
     document.getElementById('edit-save-btn').addEventListener('click', async () => {
         const title = document.getElementById('edit-title-input').value;
         const deadline = editDeadlinePicker.selectedDates[0].toISOString().replace('Z', 'Z[UTC]');
+        const category = document.getElementById('edit-category-select').value || null;
 
         await fetch(`/api/tasks`, {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id: editingTaskId, title, deadline})
+            body: JSON.stringify({id: editingTaskId, title, deadline, category})
         });
 
         document.getElementById('edit-modal').classList.remove('visible');

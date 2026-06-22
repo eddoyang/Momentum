@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import com.sun.source.tree.UsesTree;
 import io.github.eddoyang.momentum.persistence.JsonReader;
 import io.github.eddoyang.momentum.persistence.JsonWriter;
 import org.json.JSONArray;
@@ -136,9 +137,21 @@ public class TaskManager {
             }
         }
 
+        String oldCategory = task.getCategory();
+        if (oldCategory != null) {
+            Set<UUID> oldSet = categoryMap.get(oldCategory);
+            if (oldSet != null) {
+                oldSet.remove(id);
+            }
+        }
+
         task.setTitle(title);
         task.setCategory(category);
         task.setDeadline(deadline);
+
+        if (category != null) {
+            categoryMap.computeIfAbsent(category, k -> new HashSet<>()).add(id);
+        }
 
         ZonedDateTime newBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
         hourlySchedule.computeIfAbsent(newBucket, k -> new ArrayList<>()).add(id);
