@@ -30,3 +30,5 @@ Icon?
 !/data/persistence/
 !/data/persistence/testReaderEmpty.json
 !/data/persistence/testReaderGeneral.json
+!/data/persistence/testReaderGeneralFolder.json
+!/data/persistence/testWriterEmpty.json
