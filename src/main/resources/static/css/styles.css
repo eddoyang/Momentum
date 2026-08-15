@@ -52,6 +52,7 @@ body {
     max-width: 1100px;          /* width of content */
     margin: 0 auto;             /* center */
     padding: 24px;              /* space between container and content */
+    align-items:flex-start
 
     /* for future ref: If I want to surround the task content */
     /*border: 2px double #d5d5d5;*/
