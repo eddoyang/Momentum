@@ -8,7 +8,6 @@ html, body {
     margin: 0;
 }
 
-/* Momentum Header */
 h1 {
     margin: 0 0 4px 0;
     font-size: 28px;
@@ -16,7 +15,6 @@ h1 {
     text-align:left;
 }
 
-/* Momentum Subheader */
 h2 {
     margin: 0 0 32px 12px;
     text-align: left;
@@ -27,37 +25,30 @@ h2 {
 
 /*------------- background -------------*/
 body {
-    margin: 0; /* space outside element- */
-    padding: 40px; /* space inside element (gap between edges) */
-    color: black;    /* element color */
-    background-color: #cfcfcf; /* background color */
-    line-height: 1.5; /* height between elements */
-    font-family: "Elms Sans", sans-serif; /* default font */
+    margin: 0;
+    padding: 40px; 
+    color: black;   
+    background-color: #cfcfcf; 
+    line-height: 1.5; 
+    font-family: "Elms Sans", sans-serif; 
 }
 
 /*------------- foreground -------------*/
-/* container of content */
 .container {
-    height: calc(100vh - 80px); /* viewport height - 2*background padding (account for initial pad) */
+    height: calc(100vh - 80px); 
     padding: 50px;
     background-color: #f1f1f1;
     border-radius: 30px;
     border: 2px double #ffffff;
 }
 
-/* all task content */
 .task-content {
-    display: flex;              /* arrange children in a row */
-    gap: 24px;                  /* space between the two columns */
-    max-width: 1100px;          /* width of content */
-    margin: 0 auto;             /* center */
-    padding: 24px;              /* space between container and content */
+    display: flex;              
+    gap: 24px;                  
+    max-width: 1100px;       
+    margin: 0 auto;            
+    padding: 24px;              
     align-items:flex-start
-
-    /* for future ref: If I want to surround the task content */
-    /*border: 2px double #d5d5d5;*/
-    /*border-radius: 15px;*/
-    /*background-color: #f6f6f6;*/
 }
 
 
@@ -103,9 +94,9 @@ body {
 
 #add-task-form {
     flex-direction: column;
-    display: flex;              /* lay elements row format (default) */
-    gap: 8px;                   /* gap between elements */
-    margin-bottom: 24px;        /* gap between task form and list */
+    display: flex;             
+    gap: 8px;                  
+    margin-bottom: 24px;     
     background-color: white;
     border: 1px solid #dddfff;
     border-radius: 15px;
@@ -116,20 +107,19 @@ body {
 #add-task-form input,
 #add-task-form select,
 #add-task-form button {
-    padding: 8px;   /* size of border/boxes */
+    padding: 8px; 
     background-color: #f6f6f6;
-    border: 1px solid #c1c1c1; /* border attributes */
-    border-radius: 15px; /* radius of boxes (makes round) */
-    font-size: 14px;     /* size of text font */
-    font-family: inherit;  /* match the body font */
+    border: 1px solid #c1c1c1; 
+    border-radius: 15px; 
+    font-size: 14px;  
+    font-family: inherit;  
 }
 
-/* Task add button */
 #add-task-form button {
     background-color: #face5c;
     color: #ffffff;
     border: none;
-    cursor: pointer; /* make cursor pointer when hovering */
+    cursor: pointer; 
 }
 #add-task-form button:hover {
     background-color: #ffb300;
@@ -138,16 +128,15 @@ body {
 /*------------- Category form -------------*/
 .category-panel {
     flex-direction: column;
-    display: flex;              /* lay elements row format (default) */
-    gap: 8px;                   /* gap between elements */
-    margin-bottom: 24px;        /* gap between task form and list */
+    display: flex;           
+    gap: 8px;                 
+    margin-bottom: 24px;       
     background-color: white;
     border: 1px solid #dddfff;
     border-radius: 15px;
     padding: 16px;
 }
 
-/* Add category button */
 #add-category-form button {
     padding: 8px;
     border: none;
@@ -178,10 +167,9 @@ body {
 }
 
 #category-list li span {
-    flex: 1;          /* name takes the leftover space, shoving the button right */
+    flex: 1; 
 }
 
-/* Category lists: delete */
 #category-list button {
     border: none;
     border-radius: 4px;
@@ -195,7 +183,6 @@ body {
     background-color: #dd8c8c;
 }
 
-/* category dropdown */
 #category-dropdown {
     margin-top: 4px;
 }
@@ -222,7 +209,7 @@ body {
     padding: 16px;
     margin-bottom: 24px;
 }
-/* upcoming task header (h2) */
+
 #next-task h3 {
     font-family: "Short Stack", cursive;
     font-weight: 400;
@@ -232,7 +219,7 @@ body {
     color: #666;
     margin: 0 0 8px 0;
 }
-/* content of upcoming task */
+
 #next-task-content {
     font-size: 18px;
     font-weight: 600;
@@ -240,13 +227,14 @@ body {
 
 /*------------- List of Tasks -------------*/
 #task-list {
-    list-style: none;       /* remove bullets */
+    list-style: none;
     padding: 0;
     margin: 0;
     max-height: 300px;
-    overflow-y: auto;        /* scrollbar if content overflows */
+    overflow-y: auto;
 }
-/* individual tasks */
+
+
 #task-list li {
     font-family: "Cantarell", sans-serif;
     font-weight: lighter;
@@ -261,10 +249,9 @@ body {
     margin-bottom: 8px;
 }
 #task-list li span {
-    flex: 1;    /* take up remaining space, pushing buttons right */
+    flex: 1; 
 }
 
-/* complete/delete buttons */
 #task-list button {
     font-family: "Short Stack", cursive;
     padding: 4px 10px;
@@ -294,7 +281,6 @@ body {
     background-color: #edc16d;
 }
 
-/* hide the modal until editTask() is called */
 #edit-modal { display: none; }
 #edit-modal.visible { display: flex; }
 

@@ -16,23 +16,20 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <!-- JS -->
-    <script defer src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>    <!-- calendar  -->
-    <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>     <!-- drag interaction -->
+    <script defer src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script> 
+    <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script defer src="js/app.js"></script>
 </head>
 
 
 <body>
 <main class="container">
+
     <h1>Momentum</h1>
     <h2>Personal Todo List</h2>
 
-<!--content-->
     <div class="task-content">
-
-        <!--tasks body-->
         <div class="task-panel">
-            <!--upcoming task-->
             <section id="next-task">
                 <h3>To Complete</h3>
                 <div id="next-task-content">Loading...</div>
@@ -42,7 +39,6 @@
             <ul id="task-list"></ul>
         </div>
 
-        <!--tasks display-->
         <div id="edit-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center;">
             <div style="background:white; border-radius:15px; padding:32px; width:320px; display:flex; flex-direction:column; gap:12px;">
                 <h3 style="margin:0; font-size:18px;">Edit Task</h3>
@@ -58,7 +54,6 @@
             </div>
         </div>
 
-        <!--HTML form for adding task-->
         <aside class="form-column">
             <form id="add-task-form" autocomplete="off">
                 <input type="text" id="title-input" placeholder="Task title" required>
