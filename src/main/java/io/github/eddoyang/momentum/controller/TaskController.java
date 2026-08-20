@@ -1,7 +1,8 @@
 package io.github.eddoyang.momentum.controller;
 
 import io.github.eddoyang.momentum.model.Task;
-import io.github.eddoyang.momentum.model.TaskManager;
+import io.github.eddoyang.momentum.service.TaskManager;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;

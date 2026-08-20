@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.github.eddoyang.momentum.model.Task;
-import io.github.eddoyang.momentum.model.TaskManager;
+import io.github.eddoyang.momentum.service.TaskManager;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
