@@ -1,3 +1,17 @@
+
+
+/*------------- properties -------------*/
+:root {
+    --bg: #ecf0f3;
+    --shadow1: #D1D9E6;
+    --shadow2: #FFF;
+    --muted: #5C626E;
+    --blur: 8px;
+    --ink: #1A1A1A;
+
+}
+
+
 * {
     box-sizing: border-box;  /* sizing for everything */
 }
