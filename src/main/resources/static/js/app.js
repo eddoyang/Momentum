@@ -317,7 +317,7 @@ function formatDeadline(isoString) {
 }
 
 function updateCountdown() {
-    const content = document.getElementById('next-task-content');
+    const content = document.getElementById('next-task');
 
     //no tasks
     if (!nextTaskDeadline) {
