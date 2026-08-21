@@ -170,7 +170,7 @@ body {
     min-width: 80px;
     background: none;
     border-radius: 16px;
-    border: 1px solid var(--glass_border);
+    border: none;
 }
 
 #task-list {
