@@ -10,22 +10,22 @@ let tabSortable = null;
 async function loadTasks() {
 
     // testing purposes
-    const data = {
-        tasks: [
-            { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
-            { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
-            { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
-            { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
-            { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
-            { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
-            { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
-            { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
-            { id: '5', title: 'Submit assignment 3', deadline: '2026-04-28T23:59Z[UTC]' }
-        ]
-    };
+    // const data = {
+    //     tasks: [
+    //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
+    //         { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
+    //         { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
+    //         { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
+    //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
+    //         { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
+    //         { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
+    //         { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
+    //         { id: '5', title: 'Submit assignment 3', deadline: '2026-04-28T23:59Z[UTC]' }
+    //     ]
+    // };
 
-    // const response = await fetch('/api/tasks');
-    // const data = await response.json();
+    const response = await fetch('/api/tasks');
+    const data = await response.json();
     allTasks = data.tasks;
     renderTaskList();
 }
