@@ -47,9 +47,9 @@
         </section>
 
 
-        <div id="edit-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center;">
-            <div style="background:white; border-radius:15px; padding:32px; width:320px; display:flex; flex-direction:column; gap:12px;">
-                <h3 style="margin:0; font-size:18px;">Edit Task</h3>
+        <div id="edit-modal">
+
+            <div id="edit-panel">
                 <input type="text" id="edit-title-input" placeholder="Task title">
                 <input type="text" id="edit-deadline-input" placeholder="Deadline">
                 <select id="edit-category-select">
@@ -60,29 +60,34 @@
                     <button id="edit-save-btn">Save</button>
                 </div>
             </div>
+            
         </div>
 
-        <aside class="form-column">
-            <form id="add-task-form" autocomplete="off">
+
+        
+        <aside class="forms">
+            
+            <form id="task-add-panel" autocomplete="off">
                 <input type="text" id="title-input" placeholder="Task title" required>
                 <input type="text" id="deadline-input" placeholder="Deadline" required>
-                <select id="category-select">
-                    <option value="">No category</option>
-                </select>
+                <select id="category-select"><option value="">No category</option></select>
                 <input type="text" id="category-new-input" placeholder="New category name" style="display:none;">
                 <button type="submit">Add</button>
             </form>
+            
 
             <section class="category-panel">
                 <form id="add-category-form" autocomplete="off">
                     <input type="text" id="category-name-input" placeholder="New category" required>
                     <button type="submit">+ Category</button>
                 </form>
-                <details id="category-dropdown">
-                    <summary>Categories</summary>
+
+                <div id="category-list">
                     <ul id="category-list"></ul>
-                </details>
+                </div>
+
             </section>
+
         </aside>
     </div>
 

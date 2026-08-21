@@ -23,10 +23,9 @@
 
 
     --font-header: "Elms Sans", sans-serif; 
-    --font-body: "Elms Sans", sans-serif; 
     --font-writing: "Short Stack", cursive;
 
-    --text-xsm: 0.5rem;
+    --text-xsm: 0.75rem;
     --text-sm: 0.875rem;
     --text-base: 1rem;
     --text-lg: 1.25rem;
@@ -42,6 +41,19 @@ html, body {
     overflow: hidden;
     margin: 0;
     padding: 0;
+}
+
+input,
+select,
+textarea,
+button {
+    font-family: var(--font-writing);
+    font-size: var(--text-xsm);
+}
+
+.flatpickr-calendar,
+.flatpickr-calendar * {
+    font-family: var(--font-writing);
 }
 
 #main-title {
@@ -95,7 +107,7 @@ body {
     padding: 20px;
 
 
-    font-family: var(--font-body);
+    font-family: var(--font-writing);
     font-size: var(--text-base);
 
 
@@ -138,8 +150,7 @@ body {
 /*------------- Task Display -------------*/
 .task-panel {
     display: flex;
-    min-height: 350px;
-    max-height: 350px;
+    height: 350px;
     align-items: stretch;
     border: none;
     border-radius: 16px;
@@ -151,19 +162,24 @@ body {
     display: flex;
     flex-direction: column;
 
-    gap: 4px;
+    gap: 8px;
+    padding-right: 8px;
     flex: 0 0 auto;
     cursor: pointer;
     min-width: 80px;
 
-
     background: none;
     border-radius: 16px;
-    border: var(--glass_border);
+    border: 1px solid var(--glass_border);
 }
 
 #task-list {
     flex: 1;
+    min-width: 0;
+    list-style: none;
+    margin: 0;
+    margin-left: 5px;
+    padding: 0;
     overflow-y: auto;
     border-radius: 16px;
 }
@@ -175,8 +191,7 @@ body {
     align-items: center;
     gap: 8px;
     
-
-    background: var(--glass2);
+    background: var(--glass3);
     border: none;
     border-radius: 8px;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
@@ -205,12 +220,36 @@ body {
     background-color: var(--hover);
 }
 
-#edit-modal { display: none; }
-#edit-modal.visible { display: flex; }
 
+/*------------- Task edit form -------------*/
+
+#edit-modal { 
+    display: none;
+    font-family: var(--font-writing);
+}
+
+#edit-modal.visible { 
+    font-family: var(--font-writing);
+    display: flex; 
+    position:fixed; 
+    inset:0; 
+    background:rgba(0,0,0,0.4);
+    z-index:100; 
+    align-items:center; 
+    justify-content:center;
+}
+
+#edit-panel {
+    background: white; 
+    border-radius: 15px; 
+    padding: 32px; 
+    width: 320px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px;
+}
 
 .category-tab {
-    transform: translateX(14px); 
     font-family: var(--font-writing);
     font-size: clamp(0.7rem, 0.9vw, 0.9rem);
     overflow-wrap: break-word;
@@ -218,7 +257,7 @@ body {
     cursor: pointer;
     color: var(--ink);
     background: var(--silent-white);
-    border: var(--glass_border);
+    border: 1px solid var(--glass_border);
     border-radius: 18px;
     max-width: 150px;
 }
@@ -238,40 +277,48 @@ body {
 
 
 /*------------- Task adding form -------------*/
-.form-column {
+.forms {
     width: 280px;
 }
 
-#add-task-form {
+#task-add-panel {
     flex-direction: column;
     display: flex;             
     gap: 8px;                  
     margin-bottom: 24px;     
-    background-color: white;
-    border: 1px solid #dddfff;
-    border-radius: 15px;
     padding: 16px;
+
+    background: var(--glass1);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
 }
 
-/* Task info boxes */
-#add-task-form input,
-#add-task-form select,
-#add-task-form button {
+#task-add-panel input,
+#task-add-panel select,
+#task-add-panel button {
     padding: 8px; 
-    background-color: #f6f6f6;
-    border: 1px solid #c1c1c1; 
-    border-radius: 15px; 
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
     font-size: 14px;  
 }
 
-#add-task-form button {
-    background-color: #face5c;
-    color: #ffffff;
+#task-add-panel button {
+    font-family: var(--font-writing);
+    font-size: var(--text-sm);
+    background-color: var(--accent);
+    color: var(--white);
     border: none;
     cursor: pointer; 
 }
-#add-task-form button:hover {
-    background-color: #ffb300;
+#task-add-panel button:hover {
+    background-color: var(--hover);
 }
 
 /*------------- Category form -------------*/
@@ -280,34 +327,57 @@ body {
     display: flex;           
     gap: 8px;                 
     margin-bottom: 24px;       
-    background-color: white;
-    border: 1px solid #dddfff;
-    border-radius: 15px;
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
     padding: 16px;
 }
 
+#add-category-form input {
+    text-align: center;
+    height: 30px;
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
 #add-category-form button {
+    font-family: var(--font-writing);
+    font-size: var(--text-base);
+    height: 30px;
     padding: 8px;
     border: none;
     border-radius: 15px;
     font-size: 10px;
-    color: #ffffff;
-    background-color: #face5c;
+    color: var(--white);
+    background-color: var(--accent);
     cursor: pointer;
 }
 
 #add-category-form button:hover {
-    background-color: #ffb300;
+    background-color: var(--hover);
 }
 
-/* Category lists */
 #category-list {
+    font-family: var(--font-writing);
     list-style: none;
     padding: 0;
     margin: 10px 0 0 0;
+    overflow-wrap: break-word;
+    width: 250px;
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #category-list li {
+    font-family: var(--font-writing);
     display: flex;
     align-items: center;
     gap: 16px;
@@ -316,6 +386,7 @@ body {
 
 #category-list li span {
     flex: 1; 
+    min-width: 0;
 }
 
 #category-list button {
@@ -323,29 +394,14 @@ body {
     border-radius: 4px;
     padding: 4px 8px;
     font-size: 10px;
-    color: #ffffff;
-    background-color: #f19898;
+    color: var(--white);
+    background: var(--accent);
     cursor: pointer;
+    
 }
+
 #category-list button:hover {
-    background-color: #dd8c8c;
-}
-
-#category-dropdown {
-    margin-top: 4px;
-}
-
-#category-dropdown summary {
-    font-size: 14px;
-    cursor: pointer;
-    padding: 2px 0;
-    list-style: none;
-}
-#category-dropdown summary::after {
-    content: " ▾";
-}
-#category-dropdown[open] summary::after {
-    content: " ▴";
+    background: var(--hover);
 }
 
 

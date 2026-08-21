@@ -9,7 +9,7 @@ let tabSortable = null;
 // ---------- Rendering ----------
 async function loadTasks() {
 
-    // // testing purposes
+    //testing purposes
     const data = {
         tasks: [
             { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
@@ -33,6 +33,7 @@ async function loadTasks() {
 
 function renderTabs() {
 
+    // //testing purposes
     // let activeCategory = 'All';
     // let allCategories = ['Work', 'Personal', 'Errands']; // 3 example tabs
     // let tabSortable = null;
@@ -267,7 +268,7 @@ const editDeadlinePicker = flatpickr("#edit-deadline-input", {
 });
 
 // ---------- Form submission ----------
-document.getElementById('add-task-form').addEventListener('submit', async (e) => {
+document.getElementById('task-add-panel').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const title = document.getElementById('title-input').value;
@@ -320,7 +321,7 @@ function updateCountdown() {
 
     //no tasks
     if (!nextTaskDeadline) {
-        content.textContent = 'None!';
+        content.textContent = 'All Tasks Completed!';
         return;
     }
 
@@ -328,7 +329,7 @@ function updateCountdown() {
 
     //overdue
     if (diff < 0) {
-        content.textContent = `${nextTaskTitle} — overdue`;
+        content.textContent = `${nextTaskTitle} — Overdue`;
         return;
     }
 
