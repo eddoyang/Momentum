@@ -152,6 +152,7 @@ body {
     display: flex;
     height: 350px;
     align-items: stretch;
+    gap: 8px;
     border: none;
     border-radius: 16px;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
@@ -160,14 +161,13 @@ body {
 
 #tabs-display {
     display: flex;
+    flex: 0 0 150px;
     flex-direction: column;
-
+    align-items: stretch;
     gap: 8px;
-    padding-right: 8px;
-    flex: 0 0 auto;
+    overflow-y: auto;
     cursor: pointer;
     min-width: 80px;
-
     background: none;
     border-radius: 16px;
     border: 1px solid var(--glass_border);
@@ -250,6 +250,9 @@ body {
 }
 
 .category-tab {
+    width: 100%;
+    max-width: none;
+    text-align: left;
     font-family: var(--font-writing);
     font-size: clamp(0.7rem, 0.9vw, 0.9rem);
     overflow-wrap: break-word;
@@ -259,7 +262,6 @@ body {
     background: var(--silent-white);
     border: 1px solid var(--glass_border);
     border-radius: 18px;
-    max-width: 150px;
 }
 
 .category-tab.active {

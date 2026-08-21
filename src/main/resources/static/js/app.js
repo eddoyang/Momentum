@@ -9,7 +9,7 @@ let tabSortable = null;
 // ---------- Rendering ----------
 async function loadTasks() {
 
-    //testing purposes
+    // testing purposes
     const data = {
         tasks: [
             { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
