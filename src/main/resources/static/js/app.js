@@ -10,28 +10,34 @@ let tabSortable = null;
 async function loadTasks() {
 
     // // testing purposes
-    // const data = {
-    //     tasks: [
-    //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
-    //         { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
-    //         { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
-    //         { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
-    //         { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
-    //         { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
-    //         { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
-    //         { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
-    //         { id: '5', title: 'Submit assignment 3', deadline: '2026-04-28T23:59Z[UTC]' }
-    //     ]
-    // };
+    const data = {
+        tasks: [
+            { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
+            { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
+            { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
+            { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
+            { id: '1', title: 'Finish CPSC lab',     deadline: '2026-04-25T14:00Z[UTC]' },
+            { id: '2', title: 'Read Chapter 4',      deadline: '2026-04-25T20:30Z[UTC]' },
+            { id: '3', title: 'Prep slides',         deadline: '2026-04-26T09:00Z[UTC]' },
+            { id: '4', title: 'Email professor',     deadline: '2026-04-27T15:45Z[UTC]' },
+            { id: '5', title: 'Submit assignment 3', deadline: '2026-04-28T23:59Z[UTC]' }
+        ]
+    };
 
-    const response = await fetch('/api/tasks');
-    const data = await response.json();
+    // const response = await fetch('/api/tasks');
+    // const data = await response.json();
     allTasks = data.tasks;
     renderTaskList();
 }
 
+
 function renderTabs() {
-    const tabBar = document.getElementById('category-tabs');
+
+    // let activeCategory = 'All';
+    // let allCategories = ['Work', 'Personal', 'Errands']; // 3 example tabs
+    // let tabSortable = null;
+    
+    const tabBar = document.getElementById('tabs-display');
     tabBar.innerHTML = '';
 
     const categories = ['All', ...allCategories];

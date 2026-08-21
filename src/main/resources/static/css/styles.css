@@ -2,61 +2,83 @@
 
 /*------------- properties -------------*/
 :root {
-    --bg: #ecf0f3;
-    --shadow1: #D1D9E6;
-    --shadow2: #FFF;
-    --muted: #5C626E;
-    --blur: 8px;
-    --ink: #1A1A1A;
+    --bg1: #d3cce3;
+    --bg2: #e9e4f0;
 
+    --glass_bg: #ecf0f3;
+    --glass1: rgba(255, 255, 255, 0.08);
+    --glass2: rgba(255, 255, 255, 0.14);
+    --glass3: rgba(255, 255, 255, 0.22);
+    --glass_border: rgba(255, 255, 255, 0.3);
+    --glass_blur: 12px;
+
+
+    --muted: #5C626E;
+    --ink: #1A1A1A;
+    --white: white;
+    --silent-white: rgb(252, 252, 252, 0.5);
+
+    --accent: rgb(241, 39, 93);
+    --hover: rgb(252, 72, 120);
+
+
+    --font-header: "Elms Sans", sans-serif; 
+    --font-body: "Elms Sans", sans-serif; 
+    --font-writing: "Short Stack", cursive;
+
+    --text-xsm: 0.5rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 2rem;
 }
 
-
 * {
-    box-sizing: border-box;  /* sizing for everything */
+    box-sizing: border-box;
 }
 
 html, body {
     height: 100vh;
     overflow: hidden;
     margin: 0;
+    padding: 0;
 }
 
-h1 {
-    margin: 0 0 4px 0;
+#main-title {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    align-items: center;
+    gap: 2px;
+}
+
+#app-title {
+    font-family: var(--font-writing);
     font-size: 28px;
     line-height: 1.2;
-    text-align:left;
+    margin: 0;
+    text-align: left;
 }
 
-h2 {
-    margin: 0 0 32px 12px;
-    text-align: left;
+#app-subtitle {
+    font-family: var(--font-writing);
     font-size: 14px;
     font-weight: 500;
     line-height: 1.2;
+    margin: 0;
+    text-align: left;
 }
 
 /*------------- background -------------*/
 body {
-    margin: 0;
-    padding: 40px; 
-    color: black;   
-    background-color: #cfcfcf; 
-    line-height: 1.5; 
-    font-family: "Elms Sans", sans-serif; 
+    background: linear-gradient(45deg, var(--bg1), var(--bg2));
+    min-height: 100vh;
 }
 
-/*------------- foreground -------------*/
-.container {
-    height: calc(100vh - 80px); 
-    padding: 50px;
-    background-color: #f1f1f1;
-    border-radius: 30px;
-    border: 2px double #ffffff;
-}
+/*------------- all content -------------*/
 
-.task-content {
+.content {
     display: flex;              
     gap: 24px;                  
     max-width: 1100px;       
@@ -67,39 +89,153 @@ body {
 
 
 
+/*------------- Main Display -------------*/
+.main-display {
+    flex: 1;
+    padding: 20px;
 
-/*------------- Tasks body -------------*/
+
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+
+
+    background: var(--glass1);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#upcoming-panel {
+    padding: 16px;
+    margin-bottom: 24px;
+
+    background: var(--glass2);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#upcoming-panel h3 {
+    font-weight: 400;
+    font-size: 14px;
+    font-family: var(--font-writing);
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 8px 0;
+}
+
+#next-task {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+
+/*------------- Task Display -------------*/
 .task-panel {
-    flex: 1;                  /* take all remaining space */
-    border: 1px solid #ffffff;
-    border-radius: 15px;
-    padding: 40px;
-    background-color: white;
+    display: flex;
+    min-height: 350px;
+    max-height: 350px;
+    align-items: stretch;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    background: none;
 }
 
-#category-tabs {
+#tabs-display {
     display: flex;
+    flex-direction: column;
+
     gap: 4px;
-    border-bottom: 2px solid #ededed;
-}
-.category-tab {
-    font-family: "Short Stack", cursive;
-    font-size: 13px;
-    padding: 8px 16px;
-    border: 2px solid #ededed;
-    border-bottom: none;
-    border-radius: 8px 8px 0 0;
-    background-color: #f6f6f6;
-    color: #888;
+    flex: 0 0 auto;
     cursor: pointer;
-    margin-bottom: -2px;
+    min-width: 80px;
+
+
+    background: none;
+    border-radius: 16px;
+    border: var(--glass_border);
+}
+
+#task-list {
+    flex: 1;
+    overflow-y: auto;
+    border-radius: 16px;
+}
+
+#task-list li {
+    font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+    font-family: var(--font-writing);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+
+    background: var(--glass2);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+#task-list li span {
+    flex: 1; 
+}
+
+#task-list button {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: var(--font-writing);
+    cursor: pointer;
+
+    color: var(--white);
+    background: var(--accent);
+    border: none;
+    border-radius: 16px;
+}
+
+#task-list button:hover {
+    background-color: var(--hover);
+}
+
+#edit-modal { display: none; }
+#edit-modal.visible { display: flex; }
+
+
+.category-tab {
+    transform: translateX(14px); 
+    font-family: var(--font-writing);
+    font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+    overflow-wrap: break-word;
+    padding: 2px 16px;
+    cursor: pointer;
+    color: var(--ink);
+    background: var(--silent-white);
+    border: var(--glass_border);
+    border-radius: 18px;
+    max-width: 150px;
 }
 
 .category-tab.active {
-    background-color: white;
-    color: black;
-    border-bottom: 2px solid white;
+    color: var(--white);
+    background: var(--accent);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
 }
+
+.category-tab:hover {
+    background: var(--hover);
+    color: var(--white);
+}
+
 
 /*------------- Task adding form -------------*/
 .form-column {
@@ -126,7 +262,6 @@ body {
     border: 1px solid #c1c1c1; 
     border-radius: 15px; 
     font-size: 14px;  
-    font-family: inherit;  
 }
 
 #add-task-form button {
@@ -155,7 +290,6 @@ body {
     padding: 8px;
     border: none;
     border-radius: 15px;
-    font-family: inherit;
     font-size: 10px;
     color: #ffffff;
     background-color: #face5c;
@@ -202,7 +336,6 @@ body {
 }
 
 #category-dropdown summary {
-    font-family: "Short Stack", cursive;
     font-size: 14px;
     cursor: pointer;
     padding: 2px 0;
@@ -215,87 +348,6 @@ body {
     content: " ▴";
 }
 
-/*------------- Upcoming task -------------*/
-#next-task {
-    background-color: #f6f6f6;
-    border: 2px double #e4e4e4;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 24px;
-}
 
-#next-task h3 {
-    font-family: "Short Stack", cursive;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-    text-transform: uppercase;
-    color: #666;
-    margin: 0 0 8px 0;
-}
-
-#next-task-content {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-/*------------- List of Tasks -------------*/
-#task-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-
-#task-list li {
-    font-family: "Cantarell", sans-serif;
-    font-weight: lighter;
-    font-size: clamp(0.6rem, 0.9vw, 0.9rem);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #f6f6f6;
-    border: 2px solid #ededed;
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 8px;
-}
-#task-list li span {
-    flex: 1; 
-}
-
-#task-list button {
-    font-family: "Short Stack", cursive;
-    padding: 4px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.complete-btn {
-    background-color: #a9ffa9;
-}
-.complete-btn:hover {
-    background-color: #9be89a;
-}
-.delete-btn {
-    background-color: #f19898;
-}
-.delete-btn:hover {
-    background-color: #dd8c8c;
-}
-
-.edit-btn {
-    background-color: #ffcf76;
-}
-.edit-btn:hover {
-    background-color: #edc16d;
-}
-
-#edit-modal { display: none; }
-#edit-modal.visible { display: flex; }
 
 

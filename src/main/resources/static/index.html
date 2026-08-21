@@ -23,21 +23,29 @@
 
 
 <body>
-<main class="container">
+<main>
 
-    <h1>Momentum</h1>
-    <h2>Personal Todo List</h2>
+    <div id="main-title">
+        <h1 id="app-title">Momentum</h1>
+        <h2 id="app-subtitle">Personal Todo List</h2>
+    </div>
 
-    <div class="task-content">
-        <div class="task-panel">
-            <section id="next-task">
+    <div class="content">
+
+        <section class= "main-display">
+        
+            <div id="upcoming-panel">
                 <h3>To Complete</h3>
-                <div id="next-task-content">Loading...</div>
-            </section>
+                <div id="next-task">Loading...</div>
+            </div>
 
-            <div id="category-tabs"></div>
-            <ul id="task-list"></ul>
-        </div>
+            <div class="task-panel">
+                <div id="tabs-display"></div>
+                <ul id="task-list"></ul>
+            </div>
+
+        </section>
+
 
         <div id="edit-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center;">
             <div style="background:white; border-radius:15px; padding:32px; width:320px; display:flex; flex-direction:column; gap:12px;">
@@ -77,6 +85,8 @@
             </section>
         </aside>
     </div>
+
+
 </main>
 </body>
 </html>
