@@ -1,12 +1,11 @@
 package io.github.eddoyang.momentum.model;
 
-import io.github.eddoyang.momentum.persistence.Writable;
 import org.json.JSONObject;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public class Task implements Writable {
+public class Task {
 
     private UUID id;
     private String title;
@@ -26,26 +25,20 @@ public class Task implements Writable {
 
     //---------------- Getter/Setters ----------------
     public UUID getId() { return id; }
-
     public void setId(UUID id) { this.id = id; }
 
     public String getTitle() { return title; }
-
     public void setTitle(String title) { this.title = title; }
 
     public String getCategory() { return category; }
-
     public void setCategory(String category) { this.category = category; }
 
     public boolean isComplete() { return isComplete; }
-
     public void setComplete(boolean complete) { isComplete = complete; }
 
     public ZonedDateTime getDeadline() { return deadline; }
-
     public void setDeadline(ZonedDateTime deadline) { this.deadline = deadline; }
     //---------------- JSON ----------------
-    @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("id", id.toString());
