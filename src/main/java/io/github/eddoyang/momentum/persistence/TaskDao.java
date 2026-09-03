@@ -32,13 +32,13 @@ public class TaskDao {
 
     public void insert(Task t) {
         db.sql("""
-                INSERT INTO tasks (id, title, cateogry, is_complete, deadline)
+                INSERT INTO tasks (id, title, category, is_complete, deadline)
                 VALUES (:id, :title, :category, :isComplete, :deadline)
                 """)
             .param("id", t.getId().toString())
             .param("title", t.getTitle())
             .param("category", t.getCategory())
-            .param("isCompelte", t.isComplete())
+            .param("isComplete", t.isComplete())
             .param("deadline", toDb(t.getDeadline()))
             .update();
     }

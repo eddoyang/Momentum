@@ -26,7 +26,7 @@ public class CategoryDao {
                 ON DUPLICATE KEY UPDATE name = name
                 """)
             .param("name", name)
-            .param("postion", next)
+            .param("position", next)
             .update();
     }
 
@@ -42,6 +42,7 @@ public class CategoryDao {
             .update();
     }
 
+    @Transactional
     public void reorder(List<String> order) {
         for (int i = 0; i < order.size(); i++) {
             db.sql("UPDATE categories SET position = :p WHERE name = :n")

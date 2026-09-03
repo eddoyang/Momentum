@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS tasks (
     is_complete BOOLEAN NOT NULL DEFAULT FALSE,
     deadline DATETIME(0) NOT NULL,
     PRIMARY KEY (id),
-    KEY idx_tasks_open_deadline (is_complete, deadline)
+    KEY idx_tasks_open_deadline (is_complete, deadline),
     KEY idx_tasks_category (category),
     CONSTRAINT fk_task_category
-        FOREIGN KEY (cateogry) REFERENCES categories(name)
+        FOREIGN KEY (category) REFERENCES categories(name)
         ON UPDATE CASCADE
         ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
