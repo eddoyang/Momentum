@@ -1,6 +1,8 @@
 package io.github.eddoyang.momentum.service;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -260,5 +262,17 @@ public class TaskManager {
             System.err.println("Failed to save: " + e.getMessage());
         }
     }
+
+
+    //---------------- MySQL ----------------
+    private static LocalDateTime toDb(ZonedDateTime t) {
+        return t.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime().truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    private static ZonedDateTime fromDb(LocalDateTime t) {
+        return t.atZone(ZoneOffset.UTC);
+    }
 }
+
+
 
