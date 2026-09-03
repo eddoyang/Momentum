@@ -262,16 +262,6 @@ public class TaskManager {
             System.err.println("Failed to save: " + e.getMessage());
         }
     }
-
-
-    //---------------- MySQL ----------------
-    private static LocalDateTime toDb(ZonedDateTime t) {
-        return t.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime().truncatedTo(ChronoUnit.SECONDS);
-    }
-
-    private static ZonedDateTime fromDb(LocalDateTime t) {
-        return t.atZone(ZoneOffset.UTC);
-    }
 }
 
 
