@@ -1,268 +1,79 @@
 package io.github.eddoyang.momentum.service;
 
-import java.io.*;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-
-
+import io.github.eddoyang.momentum.persistence.CategoryDao;
+import io.github.eddoyang.momentum.persistence.TaskDao;
 import io.github.eddoyang.momentum.model.Task;
-import io.github.eddoyang.momentum.persistence.JsonReader;
-import io.github.eddoyang.momentum.persistence.JsonWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import jakarta.annotation.*;
+
+import java.time.ZonedDateTime;
+import java.util.*;
+
 
 @Service
 public class TaskManager {
 
-    private Map<UUID, Task> taskMap = new HashMap<>();
-    private Map<String, Set<UUID>> categoryMap = new LinkedHashMap<>();
-    private TreeMap<ZonedDateTime, List<UUID>> hourlySchedule = new TreeMap<>();
+    private final TaskDao tasks;
+    private final CategoryDao categories;
 
-    private static final String DATA_FILE = "data/momentum.json";
 
     //---------------- Methods ----------------
 
-    // Adds task to data structures
+    public TaskManager(TaskDao tasks, CategoryDao categories) {
+        this.tasks = tasks;
+        this.categories = categories;
+    }   
+
     public void addTask(Task task) {
-        taskMap.put(task.getId(), task);
-
-        ZonedDateTime hourBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
-        hourlySchedule.computeIfAbsent(hourBucket, k -> new ArrayList<>()).add(task.getId());
-
-        if (task.getCategory() != null) {
-            categoryMap.computeIfAbsent(task.getCategory(), k -> new HashSet<>()).add(task.getId());
-        }
-        saveToDisk();
+        tasks.insert(task);
     }
 
-    // Adds task to data structures without writing to JSON (used for iterating tasks)
-    public void addTaskWithoutSaving(Task task) {
-        taskMap.put(task.getId(), task);
-
-        ZonedDateTime hourBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
-        hourlySchedule.computeIfAbsent(hourBucket, k -> new ArrayList<>()).add(task.getId());
-
-        if (task.getCategory() != null) {
-            categoryMap.computeIfAbsent(task.getCategory(), k -> new HashSet<>()).add(task.getId());
-        }
+    public void markAsComplete(UUID id) {
+        tasks.markComplete(id);
     }
 
-    // Mark task as complete, remove from hourlySchedule and categoryMap
-    public void markAsComplete(UUID taskId) {
-        Task task = taskMap.get(taskId);
-        if (task == null) {
-            return;
-        }
-        if (task.isComplete()) {
-            return;
-        }
-        task.setComplete(true);
-
-        //remove
-        ZonedDateTime hourBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
-        List<UUID> bucket =  hourlySchedule.get(hourBucket);
-        if (bucket != null) {
-            bucket.remove(taskId);
-            if (bucket.isEmpty()) {
-                hourlySchedule.remove(hourBucket);
-            }
-        }
-
-        if (task.getCategory() != null) {
-            Set<UUID> categorySet = categoryMap.get(task.getCategory());
-            if (categorySet != null) {
-                categorySet.remove(taskId);
-            }
-        }
-
-        saveToDisk();
-    }
-
-    // Removes a task
-    public void removeTask(UUID taskId) {
-        Task task = taskMap.remove(taskId);
-        if (task == null) return;
-
-        ZonedDateTime hourBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
-        List<UUID> bucket =  hourlySchedule.get(hourBucket);
-        if (bucket != null) {
-            bucket.remove(taskId);
-            if (bucket.isEmpty()) {
-                hourlySchedule.remove(hourBucket);
-            }
-        }
-
-        if (task.getCategory() != null) {
-            Set<UUID> categorySet = categoryMap.get(task.getCategory());
-            if (categorySet != null) {
-                categorySet.remove(taskId);
-            }
-        }
-
-        saveToDisk();
-    }
-
-    // Returns task with the closest deadline
-    public JSONObject getNextTask() {
-        if (hourlySchedule.isEmpty()) return new JSONObject();
-
-        Map.Entry<ZonedDateTime, List<UUID>> firstHour = hourlySchedule.firstEntry();
-
-        for (UUID id : firstHour.getValue()) {
-            Task task = taskMap.get(id);
-            if (!task.isComplete()) {
-                return task.toJson();
-            }
-        }
-
-        return new JSONObject();
+    public void removeTask(UUID id) {
+        tasks.delete(id);
     }
 
     public void editTask(UUID id, String title, String category, ZonedDateTime deadline) {
-        Task task = taskMap.get(id);
-
-        if (task == null) {
-            return;
-        }
-
-        ZonedDateTime oldBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
-        List<UUID> bucket = hourlySchedule.get(oldBucket);
-
-        if (bucket != null) {
-            bucket.remove(id);
-            if (bucket.isEmpty()) {
-                hourlySchedule.remove(oldBucket);
-            }
-        }
-
-        String oldCategory = task.getCategory();
-        if (oldCategory != null) {
-            Set<UUID> oldSet = categoryMap.get(oldCategory);
-            if (oldSet != null) {
-                oldSet.remove(id);
-            }
-        }
-
-        task.setTitle(title);
-        task.setCategory(category);
-        task.setDeadline(deadline);
-
-        if (category != null) {
-            categoryMap.computeIfAbsent(category, k -> new HashSet<>()).add(id);
-        }
-
-        ZonedDateTime newBucket = task.getDeadline().truncatedTo(ChronoUnit.HOURS);
-        hourlySchedule.computeIfAbsent(newBucket, k -> new ArrayList<>()).add(id);
-
-        saveToDisk();
+        tasks.findById(id).ifPresent(task -> {
+            task.setTitle(title);
+            task.setCategory(category);
+            task.setDeadline(deadline);
+            task.update(task);
+        });
     }
 
-    // Add category
+    public JSONObject getNextTask() {
+        return tasks.findNext().map(Task::toJson).orElseGet(JSONObject::new);
+    }
+
     public void addCategory(String name) {
-        categoryMap.computeIfAbsent(name, k -> new HashSet<>());
-        saveToDisk();
+        categories.insert(name);
     }
 
-    // Remove category
     public void removeCategory(String name) {
-        Set<UUID> members = categoryMap.remove(name);
-        if(members != null) {
-            for (UUID id : members) {
-                Task task = taskMap.get(id);
-                if (task != null)
-                    task.setCategory(null);
-            }
-        }
-        saveToDisk();
+        categories.delete(name);
     }
 
-    // Reordering category tabs
     public void reorderCategories(List<String> order) {
-        LinkedHashMap<String, Set<UUID>> reordered = new LinkedHashMap<>();
-
-        for (String name : order) {
-            if (categoryMap.containsKey(name)) reordered.put(name, categoryMap.get(name));
-        }
-
-        for (String name : categoryMap.keySet()) {
-            reordered.putIfAbsent(name, categoryMap.get(name));
-        }
-
-        categoryMap = reordered;
-        saveToDisk();
+        categories.reorder(order);
     }
 
-    //---------------- Getter/Setters ----------------
-    public Map<UUID, Task> getTaskMap() {
-        return taskMap;
-    }
-    public TreeMap<ZonedDateTime, List<UUID>> getHourlySchedule() {
-        return hourlySchedule;
-    }
-    public Map<String, Set<UUID>> getCategoryMap() {
-        return categoryMap;
-    }
-
-    //---------------- JSON ----------------
-    public JSONArray taskToJson() {
-        JSONArray jsonArray = new JSONArray();
-        for (List<UUID> bucket : hourlySchedule.values()) {
-            for (UUID id : bucket) {
-                Task task = taskMap.get(id);
-                if (task != null) {
-                    jsonArray.put(task.toJson());
-                }
-            }
-        }
-        return jsonArray;
+    public List<String> getCategories() {
+        return categories.findAllOrdered();
     }
 
     public JSONObject toJson() {
-        JSONObject json = new JSONObject();
-        json.put("tasks", taskToJson());
-        json.put("categories", new JSONArray(categoryMap.keySet()));
-        return json;
-    }
+        JSONArray taskArray = new JSONArray();
+        tasks.findAllByDeadline().forEach(t -> taskArray.put(t.toJson()));
 
-    public void addCategoryWithoutSaving(String name) {
-        categoryMap.computeIfAbsent(name, k -> new HashSet<>());
-    }
-
-    @PostConstruct
-    private void loadFromDisk() {
-        try {
-            JsonReader reader = new JsonReader(DATA_FILE);
-            TaskManager loaded = reader.read();
-
-            for (String category : loaded.getCategoryMap().keySet()) {
-                this.addCategoryWithoutSaving(category);
-            }
-
-            for (Task task : loaded.getTaskMap().values()) {
-                this.addTaskWithoutSaving(task);
-            }
-
-        } catch (IOException e) {
-            System.out.println("No existing load file, creating new...");
-        }
-    }
-
-    private void saveToDisk() {
-        try {
-            JsonWriter writer = new JsonWriter(DATA_FILE);
-            writer.open();
-            writer.write(this);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            System.err.println("Failed to save: " + e.getMessage());
-        }
+        return new JSONObject()
+            .put("tasks", taskArray)
+            .put("categories", new JSONArray(categories.findAllOrdered()));
     }
 }
-
 
 
