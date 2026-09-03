@@ -42,7 +42,7 @@ public class TaskManager {
             task.setTitle(title);
             task.setCategory(category);
             task.setDeadline(deadline);
-            task.update(task);
+            tasks.update(task);
         });
     }
 

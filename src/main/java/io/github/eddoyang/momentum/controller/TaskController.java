@@ -70,9 +70,8 @@ public class TaskController {
     /* endpoint for existing categories */
     @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCategories() {
-        JSONArray categories = new JSONArray();
-        taskManager.getCategoryMap().keySet().stream().forEach(categories::put);
-        return new JSONObject().put("categories", categories).toString();
+        return new JSONObject()
+                .put("categories", new JSONArray(taskManager.getCategories())).toString();
     }
 
     /* endpoint for creating categories */
