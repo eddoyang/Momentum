@@ -298,6 +298,44 @@ document.getElementById('task-add-panel').addEventListener('submit', async (e) =
     loadCategories();
 });
 
+// ---------- Natural-language entry ----------
+document.getElementById('nl-add-panel').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const button = e.target.querySelector('button');
+    button.disabled = true;
+    button.textContent = 'Parsing...';
+
+    try {
+        const response = await fetch('/api/tasks/parse', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                text: document.getElementById('nl-input').value,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            })
+        })
+
+        const draft = await response.json();
+
+        document.getElementById('title-input').value = draft.title ?? '';
+        document.getElementById('category-select').value = draft.category ?? '';
+
+        const picker = document.getElementById('deadline-input')._flatpickr;
+        if (draft.deadline) {
+            picker.setDate(new Date(draft.deadline), false);
+        } else {
+            picker.clear();
+        }
+
+        e.target.reset();
+        document.getElementById('title-input').focus();
+    } finally {
+        button.disabled = false;
+        button.textContent = 'Parse';
+    }
+});
+
 // ---------- Helpers ----------
 function formatDeadline(isoString) {
     const cleaned = isoString.replace(/\[.*\]/, '');
