@@ -150,7 +150,7 @@ body {
 /*------------- Task Display -------------*/
 .task-panel {
     display: flex;
-    height: 350px;
+    height: 450px;
     align-items: stretch;
     gap: 8px;
     border: none;
@@ -278,9 +278,49 @@ body {
 }
 
 
-/*------------- Task adding form -------------*/
+/*------------- Task and Category Forms -------------*/
 .forms {
     width: 280px;
+    height: 450px;
+}
+
+#nl-add-panel {
+    flex-direction: column;
+    display: flex;             
+    gap: 8px;                  
+    margin-bottom: 24px;     
+    padding: 16px;
+
+    background: var(--glass1);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#nl-add-panel input,
+#nl-add-panel button {
+    padding: 8px; 
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    font-size: 14px;  
+}
+
+#nl-add-panel button {
+    font-family: var(--font-writing);
+    font-size: var(--text-sm);
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    cursor: pointer; 
+}
+#nl-add-panel button:hover {
+    background-color: var(--hover);
 }
 
 #task-add-panel {
@@ -323,7 +363,6 @@ body {
     background-color: var(--hover);
 }
 
-/*------------- Category form -------------*/
 .category-panel {
     flex-direction: column;
     display: flex;           
@@ -373,7 +412,7 @@ body {
     margin: 10px 0 0 0;
     overflow-wrap: break-word;
     width: 250px;
-    height: 200px;
+    height: 160px;
     overflow-y: auto;
     overflow-x: hidden;
 }
