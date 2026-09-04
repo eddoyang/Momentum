@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import io.github.eddoyang.momentum.parser.ParsedTask;
 import io.github.eddoyang.momentum.parser.TaskParser;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import java.time.ZonedDateTime;
@@ -25,6 +27,9 @@ public class TaskController {
 
     @Value("${momentum.parser.max-input-length}")
     private int maxInputLength;
+
+    @Value("${momentum.parser.enabled}")
+    private boolean parserEnabled;
 
     //---------------- Methods ----------------
     public TaskController(TaskManager taskManager, TaskParser taskParser) {
@@ -107,7 +112,7 @@ public class TaskController {
         taskManager.reorderCategories(names);
     }
 
-        //---------------- PARSE ----------------
+    //---------------- PARSE ----------------
     public record ParseRequest(String text, String timezone) {}
 
     @PostMapping(value = "/parse", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -116,6 +121,10 @@ public class TaskController {
         
         if (text.isEmpty() || text.length() > maxInputLength) {
             return new JSONObject().put("error", "Input too short or too long").toString();
+        }
+
+        if (!parserEnabled) {
+            return draft(text, null, null);
         }
 
         try {
@@ -134,6 +143,17 @@ public class TaskController {
                     .put("category", JSONObject.NULL)
                     .toString();
         }
+    }
+
+
+    //---------------- HELPER ----------------
+    
+    private String draft(String title, LocalDateTime deadline, String category) {
+    return new JSONObject()
+            .put("title", title)
+            .put("deadline", deadline == null ? JSONObject.NULL : deadline.toString())
+            .put("category", category == null ? JSONObject.NULL : category)
+            .toString();
     }
 }
 
