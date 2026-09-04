@@ -129,25 +129,18 @@ public class TaskController {
 
         try {
             ZonedDateTime now = ZonedDateTime.now(ZoneId.of(req.timezone()));
-            ParsedTask draft = taskParser.parse(text, taskManager.getCategories(), now);
+            ParsedTask parsed = taskParser.parse(text, taskManager.getCategories(), now);
             
-            return new JSONObject()
-                    .put("title", draft.title())
-                    .put("deadline", draft.deadline() == null ? JSONObject.NULL : draft.deadline().toString())
-                    .put("category", draft.category() == null ? JSONObject.NULL : draft.category())
-                    .toString();
+            return draft(parsed.title(), parsed.deadline(), parsed.category());
+
         } catch (Exception e) {
-            return new JSONObject()
-                    .put("title", text)
-                    .put("deadline", JSONObject.NULL)
-                    .put("category", JSONObject.NULL)
-                    .toString();
+            return draft(text, null, null);
         }
     }
 
 
     //---------------- HELPER ----------------
-    
+
     private String draft(String title, LocalDateTime deadline, String category) {
     return new JSONObject()
             .put("title", title)
