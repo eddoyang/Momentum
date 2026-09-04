@@ -109,7 +109,7 @@ public class TaskController {
 
         //---------------- PARSE ----------------
     public record ParseRequest(String text, String timezone) {}
-    
+
     @PostMapping(value = "/parse", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String parseTask(@RequestBody ParseRequest req) {
         String text = req.text() == null ? "" : req.text().strip();
@@ -124,8 +124,8 @@ public class TaskController {
             
             return new JSONObject()
                     .put("title", draft.title())
-                    .put("deadline", draft.deadline())
-                    .put("category", draft.category())
+                    .put("deadline", draft.deadline() == null ? JSONObject.NULL : draft.deadline().toString())
+                    .put("category", draft.category() == null ? JSONObject.NULL : draft.category())
                     .toString();
         } catch (Exception e) {
             return new JSONObject()

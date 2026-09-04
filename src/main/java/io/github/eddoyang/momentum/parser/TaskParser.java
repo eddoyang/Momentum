@@ -2,7 +2,6 @@ package io.github.eddoyang.momentum.parser;
 
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync;
 import com.anthropic.models.beta.messages.MessageCreateParams;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -49,7 +48,7 @@ public class TaskParser {
                 .addTool(RecordTask.class)
                 .build();
 
-        RecordTask out = client.beta().messages().create(params).content().stream()
+        RecordTask out = client().beta().messages().create(params).content().stream()
                 .flatMap(block -> block.toolUse().stream())
                 .findFirst()
                 .map(block -> block.input(RecordTask.class))
@@ -69,16 +68,16 @@ public class TaskParser {
         return """
                 You convert a short phrase into a structured task.
 
-                Current local data and time: %s (%s)
+                Current local date and time: %s (%s)
                 Today is %s
 
                 Existing categories (choose one of these exactly, or null):
                 %s
 
                 Rules:
-                - title: the task itself, with the time and category words remove. Keep the user's own wording. Do not add words they did not write.
+                - title: the task itself, with the time and category words removed. Keep the user's own wording. Do not add words they did not write.
                 - deadline: local ISO-8601, no timezone offset, e.g. 2026-09-04T13:00:00. Null if the text mentions no time at all. Do not invent a deadline.
-                - A bare time with no date means the next occurence of that time.
+                - A bare time with no date means the next occurrence of that time.
                 - A bare date with no time means 09:00 on that date.
                 - category: one of the existing categories above, matched loosely (a user typing "work" matches "Work"). Null if nothing fits. Never invent a new category.
                 """.formatted(
