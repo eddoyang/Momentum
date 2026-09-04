@@ -8,19 +8,28 @@ import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import io.github.eddoyang.momentum.parser.ParsedTask;
+import io.github.eddoyang.momentum.parser.TaskParser;
+import org.springframework.beans.factory.annotation.Value;
+import java.time.ZoneId;
+
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
-    private final TaskManager taskManager;
 
+    private final TaskManager taskManager;
+    private final TaskParser taskParser;
+
+    @Value("${momentum.parser.max-input-length}")
+    private int maxInputLength;
 
     //---------------- Methods ----------------
-    public TaskController(TaskManager taskManager) {
+    public TaskController(TaskManager taskManager, TaskParser taskParser) {
         this.taskManager = taskManager;
+        this.taskParser = taskParser;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,4 +106,34 @@ public class TaskController {
 
         taskManager.reorderCategories(names);
     }
+
+        //---------------- PARSE ----------------
+    public record ParseRequest(String text, String timezone) {}
+    
+    @PostMapping(value = "/parse", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String parseTask(@RequestBody ParseRequest req) {
+        String text = req.text() == null ? "" : req.text().strip();
+        
+        if (text.isEmpty() || text.length() > maxInputLength) {
+            return new JSONObject().put("error", "Input too short or too long").toString();
+        }
+
+        try {
+            ZonedDateTime now = ZonedDateTime.now(ZoneId.of(req.timezone()));
+            ParsedTask draft = taskParser.parse(text, taskManager.getCategories(), now);
+            
+            return new JSONObject()
+                    .put("title", draft.title())
+                    .put("deadline", draft.deadline())
+                    .put("category", draft.category())
+                    .toString();
+        } catch (Exception e) {
+            return new JSONObject()
+                    .put("title", text)
+                    .put("deadline", JSONObject.NULL)
+                    .put("category", JSONObject.NULL)
+                    .toString();
+        }
+    }
 }
+
