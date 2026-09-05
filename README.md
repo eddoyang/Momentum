@@ -1,69 +1,69 @@
 # Momentum
-[Live Demo](https://momentum-f0p6.onrender.com)
 
-A personal task manager to keep you focused on whats important.
+A personal task manager to keep you focused on what's important.
 
-## About
+[**Live Demo**](https://momentum-f0p6.onrender.com)
 
-Momentum is a project that lets you add, complete, and remove tasks, with a focus on hour-by-hour deadline ordering.
-The app sorts tasks by their closest upcoming deadline so the next thing you need to work on is always front and center.
+Momentum lets you add, complete, and remove tasks, and pins the next incomplete task by deadline. The app sorts tasks by their closest upcoming deadline so the next thing you need to work on is always front and center.
 
-As a university student, procrastination is a problem that I see almost every student face for exams, assignments, and projects.
-I wanted to build an app to learn and experience full-stack developing. However, I also wanted this app to be useful to myself and my peers.
+Personally, typing out homework lists or making clunky Excel sheets felt impractical. I wanted a simple, yet modern, way of keeping track of my deadlines and battling procrastination at the same time.
 
-Personally, typing out homework lists or making clunky excel sheets felt impractical. I wanted a simple, yet modern, way of keeping track of my deadlines.
-My solution was Momentum -  an effortless way to ensure you never miss a deadline.
+My solution was Momentum — an effortless way to ensure you never miss a deadline.
 
 ## Features
 
-- Add, complete, and delete tasks
-- Tasks surfaced in chronological order, with the most urgent one pinned at the top with a live countdown
-- Custom categories with drag-and-drop tab ordering that persists across restarts
-- Deleting a category leaves its tasks intact and uncategorized; renaming one carries every task with it
-- All data stored in MySQL, so state survives restarts and redeploys
+- **Deadline-first ordering:** tasks sorted by when they're due, with the most urgent one pinned and counting down
+- **Natural-language task entry:** plain English in, a filled-in form out
+- **Categories with drag-and-drop ordering:** reorder tabs and the order persists
+- **Safe category edits:** renaming a category updates every task that uses it; deleting one leaves its tasks intact and uncategorized, enforced by foreign keys
+- **Persistent across restarts:** MySQL, not a file on disk
 
 ## Tech stack
 
-- **Backend:** Java 21, Spring Boot 4
-- **Persistence:** MySQL 8.4, accessed with Spring's JdbcClient
-- **Frontend:** Vanilla HTML, CSS, and JavaScript, with Flatpickr for date selection and SortableJS for drag-and-drop
-- **Build tool:** Maven
-- **Local infrastructure:** Docker Compose
+| Layer | Choice |
+| --- | --- |
+| Language | Java 21 |
+| Framework | Spring Boot 4 |
+| Database | MySQL 8.4, via Spring's JdbcClient |
+| LLM | Claude Haiku 4.5 |
+| Frontend | HTML / CSS / JS, Flatpickr, SortableJS |
+| Build | Maven |
+| Local infra | Docker Compose |
+| Deploy | Dockerfile on Render |
 
-## Getting started
+## Running it locally
 
-#### Prerequisites
+**Prerequisites:** JDK 21+, Docker, and Maven (or the bundled `./mvnw` wrapper).
 
-- JDK 21 or higher
-- Maven (or use the bundled wrapper `./mvnw`)
-- Docker, to run MySQL locally, or an existing MySQL 8.4 server
+**1. Start MySQL**
 
-
-1. **Set your database passwords**
 ```bash
-cp .env.example .env
-```
-Fill in MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD. .env is gitignored and should stay that way.
-
-2. **Start MySQL**
-```bash
-docker compose up -d db
+docker compose up -d
 ```
 
-This creates the momentum database and user, and keeps the data in a named Docker volume so it survives container restarts.
+**2. Set the environment**
 
-MySQL only reads those environment variables the first time it starts against an empty volume. If you change the password afterwards, run docker compose down -v to reset it — that deletes the data.
-
-3. **Run the app**
-
-Docker Compose reads .env on its own, but Spring Boot reads the shell environment, so export the password before starting:
+Create a `.env` file in the project root:
 
 ```bash
-export MYSQL_PASSWORD=<the value from .env>
+MYSQL_PASSWORD=your_password
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Spring doesn't read `.env` on its own, so you have to hand the variables to the process yourself.
+
+**Without an Anthropic key:** set `momentum.parser.enabled=false` in `application.properties`. Everything except natural-language entry works normally.
+
+**3. Run**
+
+```bash
 ./mvnw spring-boot:run
 ```
 
-The schema is created automatically on first startup. Then open http://localhost:8080.
+Then open <http://localhost:8080>.
 
+## Project history
 
+Momentum started as a JSON-file-backed app with three in-memory indexes: a map by ID, a map of category to task IDs, and a TreeMap keyed by deadline. Those became a primary key and two MySQL indexes.
 
+The migration removed 611 lines and added 273. The service class went from 264 lines to 79. It also allowed me to build a natural-language task parser. The category foreign key forces the natural-language parser to validate its output instead of trusting it, since an invented category is rejected at insert.
