@@ -43,6 +43,7 @@ public class TaskController {
         return taskManager.toJson().toString();
     }
 
+    /* create task */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addTask(@RequestBody String body) {
         JSONObject json = new JSONObject(body);
@@ -54,6 +55,7 @@ public class TaskController {
         taskManager.addTask(new Task(id, title, category, isComplete, deadline));
     }
 
+    /* edit task */
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void editTask(@RequestBody String body) {
         JSONObject json = new JSONObject(body);
@@ -64,44 +66,44 @@ public class TaskController {
         taskManager.editTask(id, title, category, deadline);
     }
 
-    /* endpoint for existing tasks */
+    /* get all tasks */
     @GetMapping("/next")
     public String getNextTask() {
         return taskManager.getNextTask().toString();
     }
 
-    /* endpoint for marking existing tasks */
+    /* mark existing tasks */
     @PatchMapping("/{id}/complete")
     public void markComplete(@PathVariable UUID id) {
         taskManager.markAsComplete(id);
     }
 
-    /* endpoint for deleting existing tasks */
+    /* delete task */
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable UUID id) {
         taskManager.removeTask(id);
     }
 
-    /* endpoint for existing categories */
+    /* get all categories */
     @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCategories() {
         return new JSONObject()
                 .put("categories", new JSONArray(taskManager.getCategories())).toString();
     }
 
-    /* endpoint for creating categories */
+    /* create category */
     @PostMapping(value = "/categories", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addCateogry(@RequestBody String body) {
         taskManager.addCategory(new JSONObject(body).getString("name"));
     }
 
-    /* endpoint for deleting categories */
+    /* delete category */
     @DeleteMapping("/categories/{name}")
     public void deleteCategory(@PathVariable String name) {
         taskManager.removeCategory(name);
     }
 
-    /* endpoint for sorting category tabs */
+    /* sort category tabs */
     @PutMapping(value = "/categories/order", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void reorderCategories(@RequestBody String body) {
         JSONArray order = new JSONObject(body).getJSONArray("order");

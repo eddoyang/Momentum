@@ -89,7 +89,8 @@ function renderTaskList() {
     list.innerHTML = '';
 
     const visible = allTasks.filter(task =>
-        activeCategory === 'All' || (task.category || 'Uncategorized') === activeCategory
+        !task.isComplete && 
+        (activeCategory === 'All' || (task.category || 'Uncategorized') === activeCategory)
     );
 
     for (const task of visible) {
