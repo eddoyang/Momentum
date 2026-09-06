@@ -1,9 +1,10 @@
-package io.github.eddoyang.momentum.persistence;
+package persistence;
 
-import io.github.eddoyang.momentum.model.Task;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+
+import model.Task;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;

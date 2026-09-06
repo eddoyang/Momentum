@@ -1,4 +1,4 @@
-package io.github.eddoyang.momentum.model;
+package model;
 
 import org.json.JSONObject;
 

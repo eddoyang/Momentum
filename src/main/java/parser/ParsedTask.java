@@ -1,4 +1,4 @@
-package io.github.eddoyang.momentum.parser;
+package parser;
 
 import java.time.LocalDateTime;
 

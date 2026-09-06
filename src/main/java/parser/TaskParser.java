@@ -1,4 +1,4 @@
-package io.github.eddoyang.momentum.parser;
+package parser;
 
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;

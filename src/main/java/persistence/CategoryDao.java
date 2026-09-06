@@ -1,4 +1,4 @@
-package io.github.eddoyang.momentum.persistence;
+package persistence;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;

@@ -1,15 +1,14 @@
-package io.github.eddoyang.momentum.controller;
+package controller;
 
-import io.github.eddoyang.momentum.model.Task;
-import io.github.eddoyang.momentum.service.TaskManager;
+import model.Task;
+import parser.ParsedTask;
+import parser.TaskParser;
+import service.TaskManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import io.github.eddoyang.momentum.parser.ParsedTask;
-import io.github.eddoyang.momentum.parser.TaskParser;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
@@ -31,11 +30,13 @@ public class TaskController {
     @Value("${momentum.parser.enabled}")
     private boolean parserEnabled;
 
-    //---------------- Methods ----------------
+    
     public TaskController(TaskManager taskManager, TaskParser taskParser) {
         this.taskManager = taskManager;
         this.taskParser = taskParser;
     }
+
+    //---------------- APIs ----------------
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAllTasks() {
@@ -137,7 +138,6 @@ public class TaskController {
             return draft(text, null, null);
         }
     }
-
 
     //---------------- HELPER ----------------
 

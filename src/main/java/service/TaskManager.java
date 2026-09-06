@@ -1,8 +1,9 @@
-package io.github.eddoyang.momentum.service;
+package service;
 
-import io.github.eddoyang.momentum.persistence.CategoryDao;
-import io.github.eddoyang.momentum.persistence.TaskDao;
-import io.github.eddoyang.momentum.model.Task;
+import model.Task;
+import persistence.CategoryDao;
+import persistence.TaskDao;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
