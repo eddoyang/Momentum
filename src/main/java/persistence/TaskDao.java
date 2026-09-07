@@ -55,6 +55,7 @@ public class TaskDao {
         return db.sql("""
                 SELECT %s FROM tasks
                 WHERE is_complete = FALSE
+                AND deadline IS NOT NULL
                 ORDER BY deadline ASC
                 LIMIT 1
                 """.formatted(COLUMNS))
@@ -63,14 +64,14 @@ public class TaskDao {
     }
 
     public List<Task> findAllByDeadline() {
-        return db.sql("SELECT " + COLUMNS + " FROM tasks ORDER BY deadline ASC")
+        return db.sql("SELECT " + COLUMNS + " FROM tasks WHERE is_complete = FALSE ORDER BY deadline IS NULL, deadline ASC")
                 .query(MAPPER)
                 .list();
     }
 
 
     public List<Task> findByCategory(String category) {
-        return db.sql("SELECT " + COLUMNS + " FROM tasks WHERE category = :c ORDER BY deadline ASC")
+        return db.sql("SELECT " + COLUMNS + " FROM tasks WHERE category = :c ORDER BY deadline IS NULL, deadline ASC")
                 .param("c", category)
                 .query(MAPPER)
                 .list();
@@ -108,10 +109,16 @@ public class TaskDao {
     //---------------- Helpers ----------------
 
     private static LocalDateTime toDb(ZonedDateTime t) {
+        if (t == null) {
+            return null;
+        }
         return t.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime().truncatedTo(ChronoUnit.SECONDS);
     }
 
     private static ZonedDateTime fromDb(LocalDateTime t) {
+        if (t == null) {
+            return null;
+        }
         return t.atZone(ZoneOffset.UTC);
     }
 }

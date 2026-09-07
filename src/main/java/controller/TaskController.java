@@ -51,7 +51,7 @@ public class TaskController {
         String title = json.getString("title");
         String category = json.optString("category", null);
         boolean isComplete = false;
-        ZonedDateTime deadline = ZonedDateTime.parse(json.getString("deadline"));
+        ZonedDateTime deadline = json.isNull("deadline") ? null : ZonedDateTime.parse(json.getString("deadline"));
         taskManager.addTask(new Task(id, title, category, isComplete, deadline));
     }
 
@@ -62,7 +62,7 @@ public class TaskController {
         UUID id = UUID.fromString(json.getString("id"));
         String title = json.getString("title");
         String category = json.optString("category", null);
-        ZonedDateTime deadline = ZonedDateTime.parse(json.getString("deadline"));
+        ZonedDateTime deadline = json.isNull("deadline") ? null : ZonedDateTime.parse(json.getString("deadline"));
         taskManager.editTask(id, title, category, deadline);
     }
 

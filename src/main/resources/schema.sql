@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     title VARCHAR(255) NOT NULL,
     category VARCHAR(100) NULL,
     is_complete BOOLEAN NOT NULL DEFAULT FALSE,
-    deadline DATETIME(0) NOT NULL,
+    deadline DATETIME(0),
     PRIMARY KEY (id),
     KEY idx_tasks_open_deadline (is_complete, deadline),
     KEY idx_tasks_category (category),

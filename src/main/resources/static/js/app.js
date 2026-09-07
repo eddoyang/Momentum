@@ -35,10 +35,12 @@ function renderTabs() {
 
     // //testing purposes
     // let activeCategory = 'All';
-    // let allCategories = ['Work', 'Personal', 'Errands']; // 3 example tabs
+    // let allCategories = ['Work', 'Personal', 'Errands'];
     // let tabSortable = null;
     
     const tabBar = document.getElementById('tabs-display');
+    if (tabSortable) tabSortable.destroy();
+
     tabBar.innerHTML = '';
 
     const categories = ['All', ...allCategories];
@@ -60,8 +62,6 @@ function renderTabs() {
             renderTabs();
             renderTaskList();
         });
-
-        if (tabSortable) tabSortable.destroy();
 
         tabSortable = new Sortable(tabBar, {
             animation: 150,
@@ -96,9 +96,9 @@ function renderTaskList() {
     for (const task of visible) {
         const li = document.createElement('li');
 
-
+        //task text
         const text = document.createElement('span');
-        text.textContent = `${task.title} — due ${formatDeadline(task.deadline)}`;
+        text.textContent = task.deadline ? `${task.title} — due ${formatDeadline(task.deadline)}`: task.title;        
         li.appendChild(text);
 
         //complete button
@@ -210,7 +210,7 @@ const deadlinePicker = flatpickr("#deadline-input", {
     time_24hr: false
 });
 
-// ---------- API actions ----------
+
 async function completeTask(taskId) {
     await fetch(`/api/tasks/${taskId}/complete`, { method: 'PATCH' });
     loadTasks();
@@ -232,8 +232,12 @@ function editTask(taskId, currentTitle, currentDeadline, currentCategory) {
     editingTaskId = taskId;
     document.getElementById('edit-title-input').value = currentTitle;
 
-    const cleaned = currentDeadline.replace(/\[.*\]/, '');
-    editDeadlinePicker.setDate(new Date(cleaned));
+
+    if (currentDeadline) {
+        editDeadlinePicker.setDate(new Date(currentDeadline.replace(/\[.*\]/, '')));
+    } else {
+        editDeadlinePicker.clear();
+    }
 
     document.getElementById('edit-category-select').value = currentCategory || '';
     document.getElementById('edit-modal').classList.add('visible');
@@ -247,7 +251,8 @@ document.getElementById('edit-cancel-btn').addEventListener('click', () => {
 // Save Edits
 document.getElementById('edit-save-btn').addEventListener('click', async () => {
     const title = document.getElementById('edit-title-input').value;
-    const deadline = editDeadlinePicker.selectedDates[0].toISOString().replace('Z', 'Z[UTC]');
+    const picked = editDeadlinePicker.selectedDates[0];
+    const deadline = picked ? picked.toISOString().replace('Z', 'Z[UTC]') : null;
     const category = document.getElementById('edit-category-select').value || null;
 
     await fetch(`/api/tasks`, {
@@ -268,17 +273,15 @@ const editDeadlinePicker = flatpickr("#edit-deadline-input", {
     time_24hr: false
 });
 
-// ---------- Form submission ----------
+// ---------- Task Form  ----------
 document.getElementById('task-add-panel').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const title = document.getElementById('title-input').value;
-
     const category = document.getElementById('category-select').value || null;
-
-    const localDeadline = document.getElementById('deadline-input').value;
-
-    const deadline = new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]');
+    
+    const localDeadline = document.getElementById('deadline-input').value || null;
+    const deadline = localDeadline ? new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]') : null;
 
     const body = {
         id: crypto.randomUUID(),
@@ -339,6 +342,8 @@ document.getElementById('nl-add-panel').addEventListener('submit', async (e) => 
 
 // ---------- Helpers ----------
 function formatDeadline(isoString) {
+    if (!isoString) { return 'no deadline'; }
+
     const cleaned = isoString.replace(/\[.*\]/, '');
     const date = new Date(cleaned);
 
@@ -360,7 +365,7 @@ function updateCountdown() {
 
     //no tasks
     if (!nextTaskDeadline) {
-        content.textContent = 'All Tasks Completed!';
+        content.textContent = 'No Upcoming Tasks';
         return;
     }
 

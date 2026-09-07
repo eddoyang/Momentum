@@ -45,7 +45,7 @@ public class Task {
         json.put("title", title);
         json.put("category", category);
         json.put("isComplete", isComplete);
-        json.put("deadline", deadline.toString());
+        json.put("deadline", deadline == null ? JSONObject.NULL : deadline.toString());
         return json;
     }
 }
