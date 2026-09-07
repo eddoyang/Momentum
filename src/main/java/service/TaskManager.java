@@ -29,6 +29,10 @@ public class TaskManager {
     public void addTask(Task task) {
         tasks.insert(task);
     }
+    
+    public Optional<Task> getTask(UUID id) {
+        return tasks.findById(id);
+    }
 
     public void markAsComplete(UUID id) {
         tasks.markComplete(id);
@@ -37,6 +41,7 @@ public class TaskManager {
     public void removeTask(UUID id) {
         tasks.delete(id);
     }
+    
 
     public void editTask(UUID id, String title, String category, ZonedDateTime deadline) {
         tasks.findById(id).ifPresent(task -> {

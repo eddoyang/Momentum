@@ -8,9 +8,11 @@ import service.TaskManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -44,29 +46,48 @@ public class TaskController {
     }
 
     /* create task */
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void addTask(@RequestBody String body) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addTask(@RequestBody String body) {
         JSONObject json = new JSONObject(body);
-        UUID id = UUID.fromString(json.getString("id"));
-        String title = json.getString("title");
-        String category = json.optString("category", null);
-        boolean isComplete = false;
-        ZonedDateTime deadline = json.isNull("deadline") ? null : ZonedDateTime.parse(json.getString("deadline"));
-        taskManager.addTask(new Task(id, title, category, isComplete, deadline));
+
+        Task task = new Task(
+            UUID.randomUUID(),
+            json.getString("title"),
+            json.optString("category", null),
+            false,
+            json.isNull("deadline") ? null : ZonedDateTime.parse(json.getString("deadline"))
+        );
+
+        taskManager.addTask(task);
+
+        return ResponseEntity.created(URI.create("/api/tasks/" + task.getId()))
+                .body(task.toJson()
+                .toString());
     }
 
     /* edit task */
-    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void editTask(@RequestBody String body) {
+    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> editTask(@PathVariable UUID id, @RequestBody String body) {
         JSONObject json = new JSONObject(body);
-        UUID id = UUID.fromString(json.getString("id"));
-        String title = json.getString("title");
-        String category = json.optString("category", null);
-        ZonedDateTime deadline = json.isNull("deadline") ? null : ZonedDateTime.parse(json.getString("deadline"));
-        taskManager.editTask(id, title, category, deadline);
+
+        taskManager.editTask(
+            id,
+            json.getString("title"),
+            json.optString("category", null),
+            json.isNull("deadline") ? null : ZonedDateTime.parse(json.getString("deadline"))
+        );
+        return ResponseEntity.noContent().build();
     }
 
-    /* get all tasks */
+    /* get task */
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getTask(@PathVariable UUID id) {
+        return taskManager.getTask(id)
+                .map(t -> ResponseEntity.ok(t.toJson().toString()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /* get next task */
     @GetMapping("/next")
     public String getNextTask() {
         return taskManager.getNextTask().toString();
@@ -114,6 +135,8 @@ public class TaskController {
 
         taskManager.reorderCategories(names);
     }
+
+
 
     //---------------- PARSE ----------------
     public record ParseRequest(String text, String timezone) {}

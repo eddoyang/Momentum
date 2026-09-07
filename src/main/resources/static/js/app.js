@@ -62,26 +62,25 @@ function renderTabs() {
             renderTabs();
             renderTaskList();
         });
-
-        tabSortable = new Sortable(tabBar, {
-            animation: 150,
-            filter: '[data-fixed]',
-            onMove: (evt) => !evt.related.dataset.fixed,
-            onEnd: async () => {
-                const order = [...tabBar.querySelectorAll('.category-tab')]
-                    .map(t => t.textContent)
-                    .filter(name => name !== 'All');
-                allCategories = order;
-                await fetch('/api/tasks/categories/order', {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({order})
-                });
-            }
-        });
-
         tabBar.appendChild(tab);
     }
+
+    tabSortable = new Sortable(tabBar, {
+        animation: 150,
+        filter: '[data-fixed]',
+        onMove: (evt) => !evt.related.dataset.fixed,
+        onEnd: async () => {
+            const order = [...tabBar.querySelectorAll('.category-tab')]
+                .map(t => t.textContent)
+                .filter(name => name !== 'All');
+            allCategories = order;
+            await fetch('/api/tasks/categories/order', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({order})
+            });
+        }
+    });
 }
 
 function renderTaskList() {
@@ -255,12 +254,14 @@ document.getElementById('edit-save-btn').addEventListener('click', async () => {
     const deadline = picked ? picked.toISOString().replace('Z', 'Z[UTC]') : null;
     const category = document.getElementById('edit-category-select').value || null;
 
-    await fetch(`/api/tasks`, {
+    const res = await fetch(`/api/tasks/${editingTaskId}`, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id: editingTaskId, title, deadline, category})
+        body: JSON.stringify({title, deadline, category})
     });
-
+    
+    if (!res.ok) throw new Error(`Edit failed: ${res.status}`);
+    
     document.getElementById('edit-modal').classList.remove('visible');
     loadTasks();
     loadNextTask();
@@ -284,22 +285,28 @@ document.getElementById('task-add-panel').addEventListener('submit', async (e) =
     const deadline = localDeadline ? new Date(localDeadline).toISOString().replace('Z', 'Z[UTC]') : null;
 
     const body = {
-        id: crypto.randomUUID(),
         title,
         category,
         deadline
     };
 
-    await fetch('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    });
+    try {
+        const res = await fetch('/api/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(`Add failed: ${res.status}`);
 
-    e.target.reset();
-    loadTasks();
-    loadNextTask();
-    loadCategories();
+        e.target.reset();
+        loadTasks();
+        loadNextTask();
+        loadCategories();
+    } catch (err) {
+        console.error(err);
+        window.alert(err);
+    }
+
 });
 
 // ---------- Natural-language entry ----------
