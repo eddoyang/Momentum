@@ -1,0 +1,450 @@
+
+
+/*------------- properties -------------*/
+:root {
+    --bg1: #d3cce3;
+    --bg2: #e9e4f0;
+
+    --glass_bg: #ecf0f3;
+    --glass1: rgba(255, 255, 255, 0.08);
+    --glass2: rgba(255, 255, 255, 0.14);
+    --glass3: rgba(255, 255, 255, 0.22);
+    --glass_border: rgba(255, 255, 255, 0.3);
+    --glass_blur: 12px;
+
+
+    --muted: #5C626E;
+    --ink: #1A1A1A;
+    --white: white;
+    --silent-white: rgb(252, 252, 252, 0.5);
+
+    --accent: rgb(241, 39, 93);
+    --hover: rgb(252, 72, 120);
+
+
+    --font-header: "Elms Sans", sans-serif; 
+    --font-writing: "Short Stack", cursive;
+
+    --text-xsm: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 2rem;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+input,
+select,
+textarea,
+button {
+    font-family: var(--font-writing);
+    font-size: var(--text-xsm);
+}
+
+.flatpickr-calendar,
+.flatpickr-calendar * {
+    font-family: var(--font-writing);
+}
+
+#main-title {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    align-items: center;
+    gap: 2px;
+}
+
+#app-title {
+    font-family: var(--font-writing);
+    font-size: 28px;
+    line-height: 1.2;
+    margin: 0;
+    text-align: left;
+}
+
+#app-subtitle {
+    font-family: var(--font-writing);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0;
+    text-align: left;
+}
+
+/*------------- background -------------*/
+body {
+    background: linear-gradient(45deg, var(--bg1), var(--bg2));
+    min-height: 100vh;
+}
+
+/*------------- all content -------------*/
+
+.content {
+    display: flex;              
+    gap: 24px;                  
+    max-width: 1100px;       
+    margin: 0 auto;            
+    padding: 24px;              
+    align-items:flex-start
+}
+
+
+
+/*------------- Main Display -------------*/
+.main-display {
+    flex: 1;
+    padding: 20px;
+
+
+    font-family: var(--font-writing);
+    font-size: var(--text-base);
+
+
+    background: var(--glass1);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#upcoming-panel {
+    padding: 16px;
+    margin-bottom: 24px;
+
+    background: var(--glass2);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#upcoming-panel h3 {
+    font-weight: 400;
+    font-size: 14px;
+    font-family: var(--font-writing);
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 8px 0;
+}
+
+#next-task {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+
+/*------------- Task Display -------------*/
+.task-panel {
+    display: flex;
+    height: 450px;
+    align-items: stretch;
+    gap: 8px;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    background: none;
+}
+
+#tabs-display {
+    display: flex;
+    flex: 0 0 150px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    overflow-y: auto;
+    cursor: pointer;
+    min-width: 80px;
+    background: none;
+    border-radius: 16px;
+    border: none;
+}
+
+#task-list {
+    flex: 1;
+    min-width: 0;
+    list-style: none;
+    margin: 0;
+    margin-left: 5px;
+    padding: 0;
+    overflow-y: auto;
+    border-radius: 16px;
+}
+
+#task-list li {
+    font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+    font-family: var(--font-writing);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    background: var(--glass3);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+#task-list li span {
+    flex: 1; 
+}
+
+#task-list button {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: var(--font-writing);
+    cursor: pointer;
+
+    color: var(--white);
+    background: var(--accent);
+    border: none;
+    border-radius: 16px;
+}
+
+#task-list button:hover {
+    background-color: var(--hover);
+}
+
+
+/*------------- Task edit form -------------*/
+
+#edit-modal { 
+    display: none;
+    font-family: var(--font-writing);
+}
+
+#edit-modal.visible { 
+    font-family: var(--font-writing);
+    display: flex; 
+    position:fixed; 
+    inset:0; 
+    background:rgba(0,0,0,0.4);
+    z-index:100; 
+    align-items:center; 
+    justify-content:center;
+}
+
+#edit-panel {
+    background: white; 
+    border-radius: 15px; 
+    padding: 32px; 
+    width: 320px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px;
+}
+
+.category-tab {
+    width: 100%;
+    max-width: none;
+    text-align: left;
+    font-family: var(--font-writing);
+    font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+    overflow-wrap: break-word;
+    padding: 2px 16px;
+    cursor: pointer;
+    color: var(--ink);
+    background: var(--silent-white);
+    border: 1px solid var(--glass_border);
+    border-radius: 18px;
+}
+
+.category-tab.active {
+    color: var(--white);
+    background: var(--accent);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+}
+
+.category-tab:hover {
+    background: var(--hover);
+    color: var(--white);
+}
+
+
+/*------------- Task and Category Forms -------------*/
+.forms {
+    width: 280px;
+    height: 450px;
+}
+
+#nl-add-panel {
+    flex-direction: column;
+    display: flex;             
+    gap: 8px;                  
+    margin-bottom: 24px;     
+    padding: 16px;
+
+    background: var(--glass1);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#nl-add-panel input,
+#nl-add-panel button {
+    padding: 8px; 
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    font-size: 14px;  
+}
+
+#nl-add-panel button {
+    font-family: var(--font-writing);
+    font-size: var(--text-sm);
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    cursor: pointer; 
+}
+#nl-add-panel button:hover {
+    background-color: var(--hover);
+}
+
+#task-add-panel {
+    flex-direction: column;
+    display: flex;             
+    gap: 8px;                  
+    margin-bottom: 24px;     
+    padding: 16px;
+
+    background: var(--glass1);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    border: 1px solid var(--glass_border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#task-add-panel input,
+#task-add-panel select,
+#task-add-panel button {
+    padding: 8px; 
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    font-size: 14px;  
+}
+
+#task-add-panel button {
+    font-family: var(--font-writing);
+    font-size: var(--text-sm);
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    cursor: pointer; 
+}
+#task-add-panel button:hover {
+    background-color: var(--hover);
+}
+
+.category-panel {
+    flex-direction: column;
+    display: flex;           
+    gap: 8px;                 
+    margin-bottom: 24px;       
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    padding: 16px;
+}
+
+#add-category-form input {
+    text-align: center;
+    height: 30px;
+    background: var(--glass3);
+    backdrop-filter: blur(var(--glass_blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass_blur)) saturate(180%);    
+    border: 1px solid var(--glass_border);
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+#add-category-form button {
+    font-family: var(--font-writing);
+    font-size: var(--text-base);
+    height: 30px;
+    padding: 8px;
+    border: none;
+    border-radius: 15px;
+    font-size: 10px;
+    color: var(--white);
+    background-color: var(--accent);
+    cursor: pointer;
+}
+
+#add-category-form button:hover {
+    background-color: var(--hover);
+}
+
+#category-list {
+    font-family: var(--font-writing);
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    overflow-wrap: break-word;
+    width: 250px;
+    height: 160px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#category-list li {
+    font-family: var(--font-writing);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 0 6px 0;
+}
+
+#category-list li span {
+    flex: 1; 
+    min-width: 0;
+}
+
+#category-list button {
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 10px;
+    color: var(--white);
+    background: var(--accent);
+    cursor: pointer;
+    
+}
+
+#category-list button:hover {
+    background: var(--hover);
+}
+
+
+
+

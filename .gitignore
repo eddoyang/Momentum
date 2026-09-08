@@ -25,8 +25,12 @@ Icon?
 # Office temp files
 ~$*
 
-
 # secrets
 .env
 docker-compose.override.yml
 
+#Claude
+Claude outputs
+
+frontend/node_modules
+frontend/dist
