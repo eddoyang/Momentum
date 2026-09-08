@@ -1,4 +1,4 @@
-const JSON_HEADERS = { 'Content-type: ': 'application/json' }
+const JSON_HEADERS = { 'Content-Type': 'application/json' }
 
 //---------------- REQUESTS ----------------
 
@@ -15,6 +15,10 @@ export async function addTask({ title, category, deadline }) {
     })
 
     return normalize(await res.json())
+}
+
+export async function deleteTask(id) {
+    return send(`/api/tasks/${id}`, { method: 'DELETE'})
 }
 
 export async function editTask(id, { title, category, deadline }) {
