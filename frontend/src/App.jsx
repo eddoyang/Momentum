@@ -1,122 +1,92 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-
+import { useEffect, useMemo, useState } from 'react'
+import { getTasks } from './api.js'
+import NextTask from './components/NextTask.jsx'
+import TaskList from './components/TaskList.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [tasks, setTasks] = useState([])
+    const [categories, setCategories] = useState([])
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    useEffect(() => {
+        getTasks().then(d => { setTasks(d.tasks); setCategories(d.categories)})
+    }, [])
 
-      <div className="ticks"></div>
+    const nextTask = useMemo(() => tasks.find(t => t.deadline) ?? null, [tasks])
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+    return (
+        <main>
+            <div id="main-title">
+                <h1 id="app-title">Momentum</h1>
+                <h2 id="app-subtitle">Personal Todo List</h2>
+            </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+            <div className="content">
+
+                <section className="main-display">
+                
+                    <div id="upcoming-panel">
+                        <h3>To Complete</h3>
+                        <NextTask task={nextTask} />
+                    </div>
+
+                    <div className="task-panel">
+                        <div id="tabs-display"></div>
+                        <TaskList tasks={tasks} onComplete={() => {}} onDelete={() => {}} onEdit={() => {}} />
+                    </div>
+
+                </section>
+
+
+                <div id="edit-modal">
+
+                    <div id="edit-panel">
+                        <input type="text" id="edit-title-input" placeholder="Task title" />
+                        <input type="text" id="edit-deadline-input" placeholder="Deadline" />
+                        <select id="edit-category-select">
+                            <option value="">No category</option>
+                        </select>
+                        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+                            <button id="edit-cancel-btn">Cancel</button>
+                            <button id="edit-save-btn">Save</button>
+                        </div>
+                    </div>
+                    
+                </div>
+
+
+                
+                <aside className="forms">
+
+                    <form id="nl-add-panel" autoComplete="off">
+                        <input type="text" id="nl-input" placeholder="e.g. Math quiz on friday 1pm" required />
+                        <button type="submit">Parse</button>
+                    </form>
+
+                    <form id="task-add-panel" autoComplete="off">
+                        <input type="text" id="title-input" placeholder="Task title" required />
+                        <input type="text" id="deadline-input" placeholder="Deadline" />
+                        <select id="category-select"><option value="">No category</option></select>
+                        <input type="text" id="category-new-input" placeholder="New category name" style={{ display: 'none' }} />
+                        <button type="submit">Add</button>
+                    </form>
+                    
+
+
+                    <section className="category-panel">
+
+                        <form id="add-category-form" autoComplete="off">
+                            <input type="text" id="category-name-input" placeholder="New category" required />
+                            <button type="submit">+ Category</button>
+                        </form>
+
+                        <ul id="category-list"></ul>
+
+                    </section>
+
+                </aside>
+            </div>
+        </main>
+    )
 }
 
 export default App
