@@ -66,8 +66,8 @@ export async function parseTask(text, signal) {
 }
 
 //---------------- HELPERS ----------------
-const toBackend = (d) => d ? d.toISOString().replace('Z', 'Z[UTC]') : null;
-const fromBackend = (s) => s ? new Date(s.replace('Z', 'Z[UTC]')) : null; 
+const toBackend = (d) => d ? d.toISOString() : null 
+const fromBackend = (s) => s ? new Date(s) : null
 const normalize = (t) => ({ ...t, deadline: fromBackend(t.deadline) }) // normalizes object's date
 
 async function send (url, options) {
