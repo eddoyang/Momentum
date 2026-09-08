@@ -31,6 +31,22 @@ My solution was Momentum — an effortless way to ensure you never miss a deadli
 | Local infra | Docker Compose |
 | Deploy | Dockerfile on Render |
 
+## API reference
+| Method | Path                           | Body                                      | Returns                                                                                 |
+| ------ | ------------------------------ | ----------------------------------------- | --------------------------------------------------------------------------------------- |
+| GET    | `/api/tasks`                   | —                                         | `{tasks:[…], categories:[…]}`; incomplete tasks only, deadline-ordered, nulls last |
+| POST   | `/api/tasks`                   | `{title, category, deadline}` — **no id** | **201** + `Location: /api/tasks/{id}` + the created task                                |
+| GET    | `/api/tasks/{id}`              | —                                         | 200 the task, or **404**                                                                |
+| PATCH  | `/api/tasks/{id}`              | `{title, category, deadline}`             | **204 No Content**                                                                      |
+| GET    | `/api/tasks/next`              | —                                         | one task, or `{}`                                                                       |
+| PATCH  | `/api/tasks/{id}/complete`     | —                                         | 200, empty                                                                              |
+| DELETE | `/api/tasks/{id}`              | —                                         | 200, empty                                                                              |
+| GET    | `/api/tasks/categories`        | —                                         | `{categories:[…]}`                                                                      |
+| POST   | `/api/tasks/categories`        | `{name}`                                  | 200, empty                                                                              |
+| DELETE | `/api/tasks/categories/{name}` | —                                         | 200, empty                                                                              |
+| PUT    | `/api/tasks/categories/order`  | `{order:[…]}`                             | 200, empty                                                                              |
+| POST   | `/api/tasks/parse`             | `{text, timezone}`                        | `{title, deadline, category}` or `{error: "…"}`                                       |
+
 ## Running it locally
 
 **Prerequisites:** JDK 21+, Docker, and Maven (or the bundled `./mvnw` wrapper).
@@ -67,3 +83,4 @@ Then open <http://localhost:8080>.
 Momentum started as a JSON-file-backed app with three in-memory indexes: a map by ID, a map of category to task IDs, and a TreeMap keyed by deadline. Those became a primary key and two MySQL indexes.
 
 The migration removed 611 lines and added 273. The service class went from 264 lines to 79. It also allowed me to build a natural-language task parser. The category foreign key forces the natural-language parser to validate its output instead of trusting it, since an invented category is rejected at insert.
+
