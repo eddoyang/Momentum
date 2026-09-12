@@ -7,6 +7,7 @@ import TaskList from './components/TaskList.jsx'
 import EditTask from './components/EditTask.jsx'
 import AddTask from './components/AddTask.jsx'
 import CategoryManager from './components/CategoryManager.jsx'
+import CategoryTabs from './components/CategoryTabs.jsx'
 
 
 function App() {
@@ -14,12 +15,12 @@ function App() {
     const [tasks, setTasks] = useState([])
     const [categories, setCategories] = useState([])
     const [editingTask, setEditingTask] = useState(null)
+    const [activeCategory, setActiveCategory] = useState('All')
 
     const nextTask = useMemo(() => tasks.find(t => t.deadline) ?? null, [tasks])
+    const visibleTasks = useMemo(() => activeCategory === 'All' ? tasks : tasks.filter(t => t.category === activeCategory), [tasks, activeCategory])
 
-    useEffect(() => {
-        getTasks().then(d => { setTasks(d.tasks); setCategories(d.categories)})
-    }, [])
+    useEffect(() => {getTasks().then(d => { setTasks(d.tasks); setCategories(d.categories)})}, [])
 
 
     // ---------------- LOAD ----------------
@@ -68,10 +69,10 @@ function App() {
         await refresh()
     }
 
-    // async function handleReorder(next) {
-    //     setCategories(next)
-    //     await reorderCategories(next)
-    // }
+    async function handleReorder(next) {
+        setCategories(next)
+        await reorderCategories(next)
+    }
 
     // function handleParsed(d) {
     //     setDraft(d)
@@ -96,7 +97,8 @@ function App() {
                     </div>
 
                     <div className="task-panel">
-                        <TaskList tasks={tasks} onComplete={handleComplete} onDelete={handleDelete} onEdit={handleEdit} />
+                        <CategoryTabs categories={categories} activeCategory={activeCategory} onSelect={setActiveCategory} onReorder={handleReorder} />
+                        <TaskList tasks={visibleTasks} onComplete={handleComplete} onDelete={handleDelete} onEdit={handleEdit} />
                     </div>
 
                 </section>
