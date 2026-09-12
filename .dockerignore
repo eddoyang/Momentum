@@ -1,3 +1,11 @@
+# general
 target/
 .git/
+
+# secrets
 .env
+
+# frontend
+frontend/node_modules
+frontend/dist
+frontend/node
