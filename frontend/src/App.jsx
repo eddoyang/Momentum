@@ -55,6 +55,7 @@ function App() {
     async function handleDelete(id) {
         await deleteTask(id)
         await refresh()
+        setEditingTask(null)
     }
 
     async function handleComplete(id) {
@@ -101,12 +102,12 @@ function App() {
 
                     <div className="task-panel">
                         <CategoryTabs categories={categories} activeCategory={activeCategory} onSelect={setActiveCategory} onReorder={handleReorder} />
-                        <TaskList tasks={visibleTasks} onComplete={handleComplete} onDelete={handleDelete} onEdit={handleEdit} />
+                        <TaskList tasks={visibleTasks} onComplete={handleComplete} onEdit={handleEdit} />
                     </div>
 
                 </section>
 
-                {editingTask && (<EditTask key={editingTask.id} task={editingTask} categories={categories} onCancel={() => setEditingTask(null)} onSave={handleSave}/>)}
+                {editingTask && (<EditTask key={editingTask.id} task={editingTask} categories={categories} onCancel={() => setEditingTask(null)} onSave={handleSave} onDelete={handleDelete}/>)}
 
                 <aside className="forms">
 

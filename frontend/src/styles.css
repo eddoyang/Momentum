@@ -17,6 +17,7 @@
     --ink: #1A1A1A;
     --white: white;
     --silent-white: rgb(252, 252, 252, 0.5);
+    --gray: rgb(228, 224, 224);
 
     --accent: rgb(241, 39, 93);
     --hover: rgb(252, 72, 120);
@@ -238,6 +239,29 @@ body {
     align-items:center; 
     justify-content:center;
 }
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.modal-actions-right {
+    display: flex;
+    gap: 8px;
+}
+
+#edit-panel button {
+    padding: 6px 16px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-family: var(--font-writing);
+    border: 1px solid var(--glass_border);
+}
+
+#edit-panel .save-btn   { background: var(--accent); color: var(--white); }
+#edit-panel .cancel-btn { background: var(--gray); color: var(--ink); }
+#edit-panel .delete-btn { background: transparent; color: crimson; border-color: crimson; }
 
 #edit-panel {
     background: white; 

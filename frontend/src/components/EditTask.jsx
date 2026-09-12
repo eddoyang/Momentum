@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import DeadlineInput from './DeadlineInput.jsx'
 
-function EditTask({ task, categories, onCancel, onSave }) {
+function EditTask({ task, categories, onCancel, onSave, onDelete}) {
     const [title, setTitle] = useState(task?.title ?? '')
     const [category, setCategory] = useState(task?.category ?? '')
     const [deadline, setDeadline] = useState(task?.deadline ?? null)
@@ -22,9 +22,12 @@ function EditTask({ task, categories, onCancel, onSave }) {
                     {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
                 
-                <div>
-                    <button onClick={onCancel}>Cancel</button>
-                    <button onClick={handleSave}>Save</button>
+                <div className="modal-actions">
+                    <button className="delete-btn" onClick={() => onDelete(task.id)}>Delete</button>
+                    <div className="modal-actions-right">
+                        <button className="cancel-btn" onClick={onCancel}>Cancel</button>
+                        <button className="save-btn" onClick={handleSave}>Save</button>
+                    </div>
                 </div>
 
             </div>
