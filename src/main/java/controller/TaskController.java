@@ -167,11 +167,11 @@ public class TaskController {
     //---------------- HELPER ----------------
 
     private String draft(String title, LocalDateTime deadline, String category) {
-    return new JSONObject()
-            .put("title", title)
-            .put("deadline", deadline == null ? JSONObject.NULL : deadline.toString())
-            .put("category", category == null ? JSONObject.NULL : category)
-            .toString();
+        return new JSONObject()
+                .put("title", title)
+                .put("deadline", deadline == null ? JSONObject.NULL : deadline.toString())
+                .put("category", category == null ? JSONObject.NULL : category)
+                .toString();
     }
 }
 
