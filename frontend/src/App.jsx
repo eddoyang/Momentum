@@ -6,6 +6,7 @@ import NextTask from './components/NextTask.jsx'
 import TaskList from './components/TaskList.jsx'
 import EditTask from './components/EditTask.jsx'
 import AddTask from './components/AddTask.jsx'
+import CategoryManager from './components/CategoryManager.jsx'
 
 
 function App() {
@@ -13,11 +14,13 @@ function App() {
     const [tasks, setTasks] = useState([])
     const [categories, setCategories] = useState([])
     const [editingTask, setEditingTask] = useState(null)
+
     const nextTask = useMemo(() => tasks.find(t => t.deadline) ?? null, [tasks])
 
     useEffect(() => {
         getTasks().then(d => { setTasks(d.tasks); setCategories(d.categories)})
     }, [])
+
 
     // ---------------- LOAD ----------------
     async function refresh() {
@@ -55,19 +58,19 @@ function App() {
         await refresh()
     }
 
-    // async function handleAddCategory(name) {
-    //     await addCategory(name)
-    //     await refresh()
-    // }
+    async function handleAddCategory(name) {
+        await addCategory(name)
+        await refresh()
+    }
 
-    // async function handleDeleteCategory(name) {
-    //     await deleteCategory(name)
-    //     await refresh()
-    // }
+    async function handleDeleteCategory(name) {
+        await deleteCategory(name)
+        await refresh()
+    }
 
     // async function handleReorder(next) {
     //     setCategories(next)
-    //     await refresh()
+    //     await reorderCategories(next)
     // }
 
     // function handleParsed(d) {
@@ -93,7 +96,6 @@ function App() {
                     </div>
 
                     <div className="task-panel">
-                        <div id="tabs-display" />
                         <TaskList tasks={tasks} onComplete={handleComplete} onDelete={handleDelete} onEdit={handleEdit} />
                     </div>
 
@@ -109,14 +111,7 @@ function App() {
                     </form>
 
                     <AddTask categories={categories} onAdd={handleAdd} />
-
-                    <section className="category-panel">
-                        <form id="add-category-form" autoComplete="off">
-                            <input type="text" id="category-name-input" placeholder="New category" required />
-                            <button type="submit">+ Category</button>
-                        </form>
-                        <ul id="category-list"></ul>
-                    </section>
+                    <CategoryManager categories={categories} onAdd={handleAddCategory} onDelete={handleDeleteCategory} />
 
                 </aside>
 
