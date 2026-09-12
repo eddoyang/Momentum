@@ -8,6 +8,7 @@ import EditTask from './components/EditTask.jsx'
 import AddTask from './components/AddTask.jsx'
 import CategoryManager from './components/CategoryManager.jsx'
 import CategoryTabs from './components/CategoryTabs.jsx'
+import QuickAdd from './components/QuickAdd.jsx'
 
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
     const [categories, setCategories] = useState([])
     const [editingTask, setEditingTask] = useState(null)
     const [activeCategory, setActiveCategory] = useState('All')
+    const [draft, setDraft] = useState(null)
+    const [draftKey, setDraftKey] = useState(0)
 
     const nextTask = useMemo(() => tasks.find(t => t.deadline) ?? null, [tasks])
     const visibleTasks = useMemo(() => activeCategory === 'All' ? tasks : tasks.filter(t => t.category === activeCategory), [tasks, activeCategory])
@@ -74,10 +77,10 @@ function App() {
         await reorderCategories(next)
     }
 
-    // function handleParsed(d) {
-    //     setDraft(d)
-    //     setDraftKey(k => k + 1)
-    // }
+    function handleParsed(d) {
+        setDraft(d)
+        setDraftKey(k => k + 1)
+    }
     // ---------------- RENDER ----------------
     return (
         <main>
@@ -107,12 +110,8 @@ function App() {
 
                 <aside className="forms">
 
-                    <form id="nl-add-panel" autoComplete="off">
-                        <input type="text" id="nl-input" placeholder="e.g. Math quiz on friday 1pm" required />
-                        <button type="submit">Parse</button>
-                    </form>
-
-                    <AddTask categories={categories} onAdd={handleAdd} />
+                    <QuickAdd onParsed={handleParsed} />
+                    <AddTask key={draftKey} draft={draft} categories={categories} onAdd={handleAdd} />
                     <CategoryManager categories={categories} onAdd={handleAddCategory} onDelete={handleDeleteCategory} />
 
                 </aside>
