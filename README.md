@@ -2,7 +2,8 @@
 
 A personal task manager to keep you focused on what's important.
 
-[**Live Demo**](https://momentum-f0p6.onrender.com)
+[**Live Demo**](https://momentum-f0p6.onrender.com) <br>
+<small>NOTE: The parse may take up to a minute on start up. I am currently working on fixing this.</small>
 
 Momentum lets you add, complete, and remove tasks, and pins the next incomplete task by deadline. The app sorts tasks by their closest upcoming deadline so the next thing you need to work on is always front and center.
 
